@@ -1,4 +1,4 @@
-<ul class="navbar-nav mega-nav pr-lg-2 mr-lg-2">
+<ul class="navbar-nav mega-nav pr-lg-2 mr-lg-2 cat-desktop">
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle pl-0" href="#" data-toggle="dropdown">
             <i class="czi-menu align-middle mt-n1 mr-2" style="color: black;"></i>Categorías
@@ -20,3 +20,15 @@
         </ul>
     </li>
 </ul>
+
+<select class="form-control custom-select cat-mobil" onchange="location = this.value;">
+    @foreach ($categories as $category)
+    <option value="" disabled selected>Categorias</option>
+    <option value="{{ route('category.products', $category->slug) }}">{{ $category->name }}</option>
+        @if ($category->children->count() && $category->getProductCount(true))
+        <ul class="dropdown-menu">
+            @include('livewire.categories-menu-mobil-partial', ['categories' => $category->children, 'level' => 1])
+        </ul>
+        @endif
+    @endforeach
+</select>

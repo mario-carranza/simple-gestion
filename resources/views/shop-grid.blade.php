@@ -1,4 +1,4 @@
-@extends('layouts.base')
+@extends('layouts.base', ['showFilters' => $data['showFilters'] ?? false])
 
 @section('content')
 <!-- Page Title-->
@@ -17,9 +17,7 @@
     <div class="row">
         <!-- Sidebar-->
         <aside class="col-lg-4">
-            <div class="cz-sidebar rounded-lg box-shadow-lg" id="shop-sidebar">
                 @livewire('filters', ['data' => $data])
-            </div>
         </aside>
         <!-- Content  -->
         <section class="col-lg-8">

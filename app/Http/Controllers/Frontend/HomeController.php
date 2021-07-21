@@ -76,6 +76,7 @@ class HomeController extends Controller
     {
         $render = ['view' => 'searchProduct'];
         $data = ['category' => $request->category, 'product' => $request->product];
+        $data['showFilters'] = true;
 
         return view('shop-grid', compact('render', 'data'));
     }
@@ -84,6 +85,7 @@ class HomeController extends Controller
     {
         $render = ['view' => 'searchCategory'];
         $data = ['category' => $request->category];
+        $data['showFilters'] = true;
 
         return view('shop-grid', compact('render', 'data'));
     }
@@ -98,6 +100,7 @@ class HomeController extends Controller
 
         $render = ['view' => 'searchCategory'];
         $data = ['category' => $categoryId];
+        $data['showFilters'] = true;
 
         return view('shop-grid', compact('render', 'data'));
     }

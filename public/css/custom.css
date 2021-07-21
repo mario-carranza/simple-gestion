@@ -1,3 +1,23 @@
+.cat-mobil {
+    display: none;
+}
+
+@media (max-width: 990px) {
+    .cat-mobil {
+        display: block;
+    }
+}
+
+.cat-desktop {
+    display: flex;
+}
+
+@media (max-width: 990px) {
+    .cat-desktop {
+        display: none;
+    }
+}
+
 .max-height-14 {
     max-height: 14em;
 }

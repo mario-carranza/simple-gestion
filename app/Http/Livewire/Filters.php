@@ -43,7 +43,7 @@ class Filters extends Component
         $childrenIds = null;
 
         if ($category_id) {
-            $childrenIds = ProductCategory::find($category_id)->getChildrensId();
+            $childrenIds = ProductCategory::findOrFail($category_id)->getChildrensId();
             $childrenIds[] = $category_id;
         }
 

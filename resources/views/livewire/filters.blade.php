@@ -1,6 +1,6 @@
-<div>
+<div class="cz-sidebar rounded-lg box-shadow-lg" id="shop-sidebar">
         <div class="cz-sidebar-header box-shadow-sm">
-            <button class="close ml-auto" type="button" data-dismiss="sidebar" aria-label="Close"><span class="d-inline-block font-size-xs font-weight-normal align-middle">Close sidebar</span><span class="d-inline-block align-middle ml-2" aria-hidden="true">&times;</span></button>
+            <button class="close ml-auto" type="button" data-dismiss="sidebar" aria-label="Close"><span class="d-inline-block font-size-xs font-weight-normal align-middle">Cerrar</span><span class="d-inline-block align-middle ml-2" aria-hidden="true">&times;</span></button>
         </div>
         <div class="cz-sidebar-body">
             <!-- Categories-->
@@ -69,6 +69,7 @@
                     </div>
                 </div>
             --}}
+
             <!-- Price range-->
             <div class="widget mb-4 pb-4 border-bottom">
                 <h3 class="widget-title">Precio</h3>
@@ -98,6 +99,7 @@
                     <button class="btn btn-block mt-3 btn-primary btn-shadow" wire:click="filter">Buscar</button>
                 </div>
             </div>
+
             <!-- Filter by Brand-->
             @if ($brands->count())
             <div class="widget cz-filter mb-4 pb-4 border-bottom">
@@ -120,6 +122,7 @@
                 </ul>
             </div>
             @endif
+            
             <!-- Filter by attributes -->
             <form action="">
             @foreach($attributes as $attribute)
