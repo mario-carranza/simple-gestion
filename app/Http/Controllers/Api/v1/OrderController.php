@@ -8,6 +8,7 @@ use App\Models\OrderErrorLog;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Api\Controller;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
@@ -100,5 +101,39 @@ class OrderController extends Controller
         ];
 
         return $orderLogs;
+    }
+
+    public function getLast(Request $request)
+    {
+        $status = $request->input('status');
+
+        $order = Order::orderBy('created_at', 'desc')
+                    ->when($status, function ($query) use ($status) {
+                        return $query->where('status', $status);
+                    })
+                    ->first();
+        
+        if (!$order) return response()->json([ 
+            'status' => 'error', 
+            'message' => 'No existe una orden con los parametros especificados',
+        ],  404);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'id' => $order->id,
+                'status' => $order->status_description,
+                'order_basic_data' => [
+                    'customer_id' => $order->customer_id,
+                    'uid' => $order->uid,
+                    'first_name' => $order->first_name,
+                    'last_name' => $order->last_name,
+                    'email' => $order->email,
+                    'total' => $order->total,
+                    'order_status' => $order->order_status,
+                    'date' => Carbon::parse($order->created_at)->format('d-m-Y'),
+                ],
+            ],
+        ], 200);
     }
 }

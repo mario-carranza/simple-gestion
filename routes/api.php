@@ -147,6 +147,8 @@ Route::group([ 'prefix' => '/v1'], function() {
         ->name('api.product-class-attributes.show-by-code');
 
     // Orders
+    Route::get('/orders/getLast', 'Api\v1\OrderController@getLast')
+        ->name('api.orders.show.last');
     Route::get('/orders/{id}', 'Api\v1\OrderController@show')
         ->name('api.orders.show');
     Route::put('/orders/{id}/status', 'Api\v1\OrderController@updateStatus')
@@ -156,6 +158,7 @@ Route::group([ 'prefix' => '/v1'], function() {
         ->name('api.orders.show.logs');
     Route::get('/orders/error/logs/{id}', 'Api\v1\OrderController@fetchErrorLog')
         ->name('api.orders.show.log');
+    
 
     // Warehouse
     Route::post('/warehouses', 'Api\v1\ProductInventorySourceController@store')
