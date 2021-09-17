@@ -277,7 +277,6 @@ class Product extends Model
     /**
      * Remove (files and db references) all images of a product
      *
-     *
      */
 
     public function deleteImages()
@@ -307,7 +306,6 @@ class Product extends Model
 
     /**
      * Upload child products image
-     *
      *
      */
 
@@ -527,6 +525,31 @@ class Product extends Model
         }
 
         return $shippingMethods;
+    }
+
+
+    /**
+     * Search a product by SKU and Warehouse code. NOTE: This method may fail when there is
+     * two sellers with the same product in the same warehouse.
+     *
+     * @param string $warehouseCode
+     * @param string $sku
+     * @return Product|null
+     */
+    public static function getByWarehouseAndSku(string $warehouseCode, string $sku) : ?Product
+    {
+        $warehouse = ProductInventorySource::where('code', $warehouseCode)->first();
+
+        $productInventory = ProductInventory::where('product_inventory_source_id', $warehouse->id)
+                                ->whereHas('product', function ($query) use ($sku)  {
+                                   return $query->where('sku', $sku);
+                                })->first();
+                                
+        if (!$productInventory) {
+            return null;
+        }
+
+        return Product::find($productInventory->product_id);
     }
 
     /*
