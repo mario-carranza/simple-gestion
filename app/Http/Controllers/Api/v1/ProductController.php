@@ -390,5 +390,61 @@ class ProductController extends Controller
         ], 200);
     }
 
+    public function updateImages(Request $request, $warehouseCode, $sku)
+    {
+        $messages = [
+            '*.exists' => 'El valor de :attribute no se encuentra en la base de datos',
+        ];
 
+        $rules = [
+            'sku' => 'required|exists:products,sku',
+            'warehouse' => 'required|exists:product_inventory_sources,code',
+            'images' => 'array',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg',
+        ];
+
+        $data = [
+            'sku' => $sku,
+            'warehouse' => $warehouseCode,
+            'images' => $request->file('images'),
+        ];
+
+        $validator = Validator::make($data, $rules, $messages);
+      
+        if ($validator->fails()) {
+          return response()->json([ 'status' => 'error', 'message' => $validator->errors() ], 400);
+        }
+
+        $product = Product::getByWarehouseAndSku($warehouseCode, $sku);
+
+        if (!$product) {
+            return response()->json([ 
+                'status' => 'error', 
+                'message' => 'La bodega no contiene el producto con el SKU indicado',
+            ],  404);
+        };
+
+        if ($request->file('images')) {
+            $imagesArray = [];
+
+            // Convert image to base64. Product observer will upload to the server
+            foreach ($request->file('images') as $image) {
+                array_push($imagesArray, ['image' => 'data:image/jpeg;base64,' . base64_encode(file_get_contents($image))]);
+            }
+
+            $product->images_json = $imagesArray;
+        }
+
+        try {
+            $product->update();
+        } catch(Exception $exception) {
+            return response()->json([ 'status' => 'error', 'message' => $exception->getMessage() ], 400);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Imagenes del producto (' . $product->sku . ') actualizadas',
+            'data' => $product,
+        ], 200);
+    }
 }
