@@ -20,6 +20,7 @@ use App\Http\Resources\ProductResource;
 use Illuminate\Database\QueryException;
 use App\Http\Controllers\Api\Controller;
 use App\Http\Requests\Api\ProductRequest;
+use App\Models\ProductCategory;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
@@ -444,6 +445,55 @@ class ProductController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Imagenes del producto (' . $product->sku . ') actualizadas',
+            'data' => $product,
+        ], 200);
+    }
+
+    public function updateCategories(Request $request, $warehouseCode, $sku)
+    {
+        $messages = [
+            '*.exists' => 'El valor de :attribute no se encuentra en la base de datos',
+        ];
+
+        $rules = [
+            'sku' => 'required|exists:products,sku',
+            'warehouse' => 'required|exists:product_inventory_sources,code',
+            'categories' => 'array',
+            'categories.*' => 'exists:product_categories,code',
+        ];
+
+        $data = [
+            'sku' => $sku,
+            'warehouse' => $warehouseCode,
+            'categories' => $request->categories,
+        ];
+
+        $validator = Validator::make($data, $rules, $messages);
+      
+        if ($validator->fails()) {
+          return response()->json([ 'status' => 'error', 'message' => $validator->errors() ], 400);
+        }
+
+        $product = Product::getByWarehouseAndSku($warehouseCode, $sku);
+
+        if (!$product) {
+            return response()->json([ 
+                'status' => 'error', 
+                'message' => 'La bodega no contiene el producto con el SKU indicado',
+            ],  404);
+        };
+
+        try {
+            $categoriesId = ProductCategory::whereIn('code', $request->categories)->get()->pluck('id');
+            $product->categories()->sync($categoriesId);
+            $product->update();
+        } catch(Exception $exception) {
+            return response()->json([ 'status' => 'error', 'message' => $exception->getMessage() ], 400);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Categorias del producto (' . $product->sku . ') actualizadas',
             'data' => $product,
         ], 200);
     }
