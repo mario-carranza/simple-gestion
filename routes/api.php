@@ -84,7 +84,6 @@ Route::group([ 'prefix' => '/v1'], function() {
     Route::get('/product-brands', 'Api\v1\ProductBrandController@all')
         ->name('api.product-brands.all');
 
-
     // Brand
     Route::post('/brands', 'Api\v1\ProductBrandController@store')
         ->middleware(['auth.jwt', 'permission:productbrand.create'])

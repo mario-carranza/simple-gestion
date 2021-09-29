@@ -67,7 +67,15 @@ class HomeController extends Controller
 
     public function productDetail(Request $request)
     {
-        $product = Product::where('url_key', $request->slug)->firstOrFail();
+        if (session()->has('commune_id')) {
+            $product = Product::byLocation()->where('url_key', $request->slug)->first();
+        } else {
+            $product = Product::where('url_key', $request->slug)->firstOrFail();
+        }
+
+        if (!$product) {
+            return redirect()->route('home');
+        }
 
         return view('product', compact('product'));
     }
