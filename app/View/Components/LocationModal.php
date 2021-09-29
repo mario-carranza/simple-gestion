@@ -15,7 +15,9 @@ class LocationModal extends Component
      */
     public function __construct()
     {
-        $this->communes = Commune::whereHas('product_inventory_sources')->get()->sortBy('name');
+        $this->communes = Commune::whereHas('product_inventory_sources', function ($query) {
+            return $query->whereHas('products');
+        })->get()->sortBy('name');
     }
 
     /**
