@@ -63,6 +63,9 @@ Route::group([ 'prefix' => '/v1'], function() {
     Route::post('/products/{warehouse}/{sku}/images', 'Api\v1\ProductController@updateImages')
         ->middleware(['auth.jwt', 'permission:product.update'])
         ->name('api.products.update-images');
+    Route::post('/products/{warehouse}/{sku}/categories', 'Api\v1\ProductController@updateCategories')
+        ->middleware(['auth.jwt', 'permission:product.update'])
+        ->name('api.products.update-categories');
     Route::get('/products/{id}', 'Api\v1\ProductController@show')
         ->name('api.products.show');
     Route::post('/products/{warehouse}/{sku}/shipping', 'Api\v1\ProductController@updateShipping')
