@@ -621,6 +621,18 @@ class Product extends Model
         return $query->where('seller_id', Seller::whereUserId(auth()->user()->id)->first()->id);
     }
 
+    public function scopeShouldShow($query)
+    {
+        return $query
+            ->selectRaw(
+                '(CASE
+                    WHEN visible_from IS NULL THEN 1
+                    WHEN visible_from IS NOT NULL AND (visible_from <= CURDATE() AND  CURDATE() <= visible_to) THEN 1
+                    ELSE 0
+                  END) AS should_show'
+            )->having('should_show', '>=', 1);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | ACCESSORS

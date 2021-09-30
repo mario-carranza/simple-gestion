@@ -66,7 +66,7 @@ class HomeController extends Controller
 
     public function productDetail(Request $request)
     {
-        $product = Product::where('url_key', $request->slug)->firstOrFail();
+        $product = Product::where('url_key', $request->slug)->select('*')->shouldShow()->firstOrFail();
 
         return view('product', compact('product'));
     }
