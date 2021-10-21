@@ -45,15 +45,15 @@ class SalesReportController extends BaseController
         $request = request();
 
         if ($request->wantsJson()) {
-            $from = $request->from ?? today()->subDays(14);
-            $to = $request->to ?? today();
+            $from = Carbon::parse($request->from) ?? today()->subDays(14);
+            $to = Carbon::parse($request->to) ?? today();
 
         } else {
             $from = today()->subDays(14);
             $to = today();
         }
 
-        return Carbon::parse($from)->daysUntil($to);
+        return [$from, $to];
     }
 
     private function getData(Request $request)
@@ -78,8 +78,8 @@ class SalesReportController extends BaseController
             $sales = Order::whereHas('order_items')
                 ->whereBetween(
                     'created_at',
-                    [$period->first()->startOfDay(),
-                        $period->last()->endOfDay()]
+                    [$period[0]->startOfDay(),
+                        $period[1]->endOfDay()]
                 )->with(['order_items.seller' => function ($query) {
                 $query->groupBy('id');
             }])->whereIn('status', [Order::STATUS_PAID, Order::STATUS_COMPLETED])
@@ -92,8 +92,8 @@ class SalesReportController extends BaseController
                 }
             )->whereBetween(
                 'created_at',
-                [$period->first()->startOfDay(),
-                    $period->last()->endOfDay()]
+                [$period[0]->startOfDay(),
+                    $period[1]->endOfDay()]
             )->with(['order_items.seller' => function ($query) use ($requestSellerId) {
                 $query->where('id', $requestSellerId)->groupBy('id');
             }])->whereIn('status', [Order::STATUS_PAID, Order::STATUS_COMPLETED])
