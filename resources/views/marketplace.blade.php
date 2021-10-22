@@ -309,25 +309,36 @@ $today =  Carbon::now();
     </section>
 -->
 
-@if($banners[2]['status'] || $banners[3]['status'])
+@if(@$banners[2]['status'] && @$banners[3]['status'])
 <section class="container mt-4 mb-grid-gutter">
     <div class="rounded-lg py-4">
         <div class="row text-center">
-            @if($banners[2]['path_web'] && $banners[3]['path_web'])
-                <div class="col-md-6 pb-3">
-                    <img src="{{url($banners[2]['path_web'])}}" alt="{{$banners[2]['name']}}" class="img-fluid border-radious-3">
-                </div>
-                <div class="col-md-6 pb-3">
-                    <img src="{{url($banners[3]['path_web'])}}" alt="{{$banners[3]['name']}}" class="img-fluid border-radious-3">
-                </div>
-            @else
-                @php
-                    $imgPath = ($banners[2]['path_web'])?$banners[2]['path_web']:$banners[3]['path_web'];
-                @endphp
-                <div class="col-md-12 pb-3">
-                    <img src="{{url($imgPath)}}" class="img-fluid border-radious-3">
-                </div>
-            @endif
+            <div class="col-md-6 pb-3">
+                <img src="{{url($banners[2]['path_web'])}}" alt="{{$banners[2]['name']}}" class="img-fluid border-radious-3">
+            </div>
+            <div class="col-md-6 pb-3">
+                <img src="{{url($banners[3]['path_web'])}}" alt="{{$banners[3]['name']}}" class="img-fluid border-radious-3">
+            </div>
+        </div>
+    </div>
+</section>
+@elseif(@$banners[2]['status'])
+<section class="container mt-4 mb-grid-gutter">
+    <div class="rounded-lg py-4">
+        <div class="row text-center">
+            <div class="col-md-12 pb-3">
+                <img src="{{url($banners[2]['path_web'])}}" alt="{{$banners[2]['name']}}" class="img-fluid border-radious-3">
+            </div>
+        </div>
+    </div>
+</section>
+@elseif(@$banners[3]['status'])
+<section class="container mt-4 mb-grid-gutter">
+    <div class="rounded-lg py-4">
+        <div class="row text-center">
+            <div class="col-md-12 pb-3">
+                <img src="{{url($banners[3]['path_web'])}}" alt="{{$banners[3]['name']}}" class="img-fluid border-radious-3">
+            </div>
         </div>
     </div>
 </section>
