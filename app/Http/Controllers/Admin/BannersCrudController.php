@@ -28,8 +28,8 @@ class BannersCrudController extends CrudController
         CRUD::setModel(\App\Models\Banners::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/banners');
         CRUD::setEntityNameStrings('banners', 'banners');
-       // $this->crud->denyAccess('create');
-       // $this->crud->denyAccess('delete');
+        $this->crud->denyAccess('create');
+        $this->crud->denyAccess('delete');
 
        $this->admin = false;
     }
@@ -104,7 +104,7 @@ class BannersCrudController extends CrudController
         CRUD::addField([
             'name' => 'path_web',
             'type' => 'image',
-            'label' => 'Banner Web (Reconmendable: 1350x180)',
+            'label' => 'Banner Web (Recomendable: 1350x180)',
             'crop' => true,
             'wrapper' => [
                 'class' => 'form-group col-md-6'
@@ -114,7 +114,7 @@ class BannersCrudController extends CrudController
         CRUD::addField([
             'name' => 'path_mobile',
             'type' => 'image',
-            'label' => 'Banner Mobile (Reconmendable: 350x150)',
+            'label' => 'Banner Mobile (Recomendable: 350x150)',
             'crop' => true,
             'wrapper' => [
                 'class' => 'form-group col-md-6'
