@@ -624,12 +624,16 @@ class Product extends Model
     public function scopeShouldShow($query)
     {
         return $query
+            ->select('*')
             ->selectRaw(
                 '(CASE
-                    WHEN visible_from IS NULL THEN 1
-                    WHEN visible_from IS NOT NULL AND (visible_from <= CURDATE() AND  CURDATE() <= visible_to) THEN 1
-                    ELSE 0
-                  END) AS should_show'
+                    WHEN (visible_from IS NULL AND visible_to IS NULL) THEN 1
+                    WHEN (visible_from IS NOT NULL AND visible_to IS NULL) AND (visible_from <= CURDATE()) THEN 1
+                    WHEN (visible_to IS NOT NULL AND visible_from IS NULL) AND (visible_to >= CURDATE()) THEN 1
+                    WHEN (visible_from IS NOT NULL AND visible_to IS NOT NULL) AND (visible_from <= CURDATE() AND  CURDATE() <= visible_to) THEN 1
+                ELSE 0
+                END)  
+                AS should_show'
             )->having('should_show', '>=', 1);
     }
 
