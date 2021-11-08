@@ -7,3 +7,9 @@
 .border-radious-3{
     border-radius: 3em !important;
 }
+
+@media (max-width: 576px) {
+    .img-contain {
+        object-fit: contain;
+    }
+}
