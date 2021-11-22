@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Section;
 use App\Models\Seller;
 use Illuminate\Support\Facades\Route;
 
@@ -98,6 +99,12 @@ Route::group([
     Route::get('webpay/mall/download/{order}', 'Payments\Transbank\WebpayPlusMallController@download')->name('transbank.webpayplus.mall.download');
     Route::get('test/{order}', 'Payments\Transbank\WebpayPlusMallController@test')->name('transbank.test.view');
 });
-// Route::get('complete', function(){
-//     return view('payments.transbank.webpay.mall.complete');
-// });
+
+if (\Illuminate\Support\Facades\Schema::hasTable('sections')) {
+    $sections = Section::where('status', 1)->get();
+
+    foreach ($sections as $section) {
+        Route::get("/$section->slug", 'Frontend\SectionController@index')->name("section.$section->slug.index");
+        Route::get("/$section->slug/shop-grid/", 'Frontend\SectionController@getProductsByCategory')->name("section.$section->slug.shop-grid");;
+    }
+}
