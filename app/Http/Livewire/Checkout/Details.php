@@ -14,6 +14,8 @@ class Details extends Component
     public $cart;
     public $is_business;
     public $anotherDataInvoice;
+    public $communes;
+    public $invoiceCommunes;
     protected $listeners = [
         'details:save' => 'save'
     ];
@@ -23,6 +25,7 @@ class Details extends Component
         'data.address_street' => 'required|min:3',
         'data.address_number' => 'required|numeric',
         'data.address_commune_id' => 'required',
+        'data.address_region_id' => 'required',
         'data.email' => 'required|email',
         'data.cellphone' => 'required',
         'data.receiver_name' => 'max:255',
@@ -53,6 +56,7 @@ class Details extends Component
             'cellphone' => $this->cart->cellphone,
             'email' => $this->cart->email,
             'address_commune_id' => $this->cart->address_commune_id,
+            'address_region_id' => $this->cart->address_region_id,
             'address_street' => $this->cart->address_street,
             'address_number' => $this->cart->address_number,
             'address_office' => $this->cart->address_office,
@@ -84,6 +88,7 @@ class Details extends Component
             'cellphone' =>  array_key_exists('cellphone', $invoice) ? $invoice['cellphone'] : '',
             'email' =>  array_key_exists('email', $invoice) ? $invoice['email'] : '',
             'address_commune_id' =>  array_key_exists('address_commune_id', $invoice) ? $invoice['address_commune_id'] : '',
+            'address_region_id' =>  array_key_exists('address_region_id', $invoice) ? $invoice['address_region_id'] : '',
             'address_street' =>  array_key_exists('address_street', $invoice) ? $invoice['address_street'] : '',
             'address_number' =>  array_key_exists('address_number', $invoice) ? $invoice['address_number'] : '',
             'address_office' =>  array_key_exists('address_office', $invoice) ? $invoice['address_office'] : '',
@@ -93,16 +98,25 @@ class Details extends Component
         ];
     }
 
-
     public function render()
     {
+        if (!empty($this->data['address_region_id'])) {
+            $region = $this->data['address_region_id'];
+            $this->communes = \App\Models\Commune::whereHas('attribute_province', function($q) use($region) {
+                $q->where('region_id', $region);
+            })->orderBy('name')->get();
+        }
+        if (!empty($this->invoice['address_region_id'])) {
+            $region = $this->invoice['address_region_id'];
+            $this->invoiceCommunes = \App\Models\Commune::whereHas('attribute_province', function($q) use($region) {
+                $q->where('region_id', $region);
+            })->orderBy('name')->get();
+        }
         return view('livewire.checkout.details');
     }
 
     public function updated($propertyName)
     {
-
-
         $dynamicRules = $this->getCustomRules();
         $this->rules = array_merge($this->rules, $dynamicRules);
         $this->rules = array_merge($this->rules, [
@@ -139,6 +153,7 @@ class Details extends Component
                 'invoice.address_number' => 'required|numeric',
                 'invoice.address_street' => 'required',
                 'invoice.address_commune_id' => 'required|exists:communes,id',
+                'invoice.address_region_id' => 'required|exists:regions,id',
                 // 'invoice.business_activity_id' => 'required|exists:business_activities,id',
                 // 'invoice.business_name' => 'required|min:3',
             ]);

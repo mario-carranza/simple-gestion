@@ -38,6 +38,13 @@ class Order extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
      */
+    public function updateWithoutEvents(array $options=[])
+    {
+        return static::withoutEvents(function() use ($options) {
+            return $this->update($options);
+        });
+    }
+
     public function getSellers()
     {
         $products_id = OrderItem::whereOrderId($this->id)->select('product_id')->with('product')->get();

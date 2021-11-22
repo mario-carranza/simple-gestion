@@ -18,7 +18,7 @@ class Item extends Component
     //public $shipping;
     public $product;
     public $shippingMethods;
-    public $confirm;
+    //public $confirm;
     public $communeSelected;
     public $individualShipment;
     public $show;
@@ -53,7 +53,7 @@ class Item extends Component
 
     public function mount(CartItem $item, $view = 'cart.item')
     {
-        $this->confirm = null;
+        //$this->confirm = null;
         $this->item = $item;
         $this->product = $item->product;
         $this->view = $view;
@@ -132,7 +132,7 @@ class Item extends Component
 
     public function deleteConfirm($id)
     {
-        $this->confirm = $id;
+        ///$this->confirm = $id;
     }
 
     public function delete()

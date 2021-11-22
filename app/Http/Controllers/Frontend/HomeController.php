@@ -22,11 +22,13 @@ class HomeController extends Controller
         ->whereHas('products', function ($query) {
             $query->where('status', '=', '1')
             ->where('is_approved', '=', '1')
+            ->shouldShow()
             ->where('parent_id', '=', null);
         })->limit(3)->inRandomOrder()->get();
 
         $featuredProducts = Product::where('status', '=' ,'1')
         ->where('featured', '=' ,'1')
+        ->shouldShow()
         ->inRandomOrder()->get();
 
         $banner1 = Banners::where('section',1)->first();
@@ -66,7 +68,7 @@ class HomeController extends Controller
 
     public function productDetail(Request $request)
     {
-        $product = Product::where('url_key', $request->slug)->firstOrFail();
+        $product = Product::where('url_key', $request->slug)->select('*')->shouldShow()->firstOrFail();
 
         return view('product', compact('product'));
     }

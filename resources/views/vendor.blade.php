@@ -42,6 +42,78 @@
                         <h6>Información</h6>
                         <p>{{$seller->description}}</p>
                     @endif
+                    @if($seller->legal_representative_name)
+                        <h6>Representante</h6>
+                        <p class="font-size-ms text-muted mb-0">{{$seller->legal_representative_name}}</p>
+                        <br>
+                    @endif
+                    @if($seller->addresses)
+                        @php
+                            $sellerAddress = $seller->addresses[0];
+                        @endphp
+                        <h6>Dirección</h6>
+                        @if($sellerAddress->street)
+                            <p class="font-size-ms text-muted mb-0">Calle: {{$sellerAddress->street}}</p>
+                        @endif
+                        @if($sellerAddress->number)
+                            <p class="font-size-ms text-muted mb-0">Número: {{$sellerAddress->number}}</p>
+                        @endif
+                        @if($sellerAddress->subnumber)
+                            <p class="font-size-ms text-muted mb-0">Casa/Dpto/Oficina: {{$sellerAddress->subnumber}}</p>
+                        @endif
+                        @if($sellerAddress->commune_id)
+                            <p class="font-size-ms text-muted mb-0">Comuna: {{\App\Models\Commune::find($sellerAddress->commune_id)->name}}</p>
+                        @endif
+                        @if ($seller->email)
+                            <p class="font-size-ms text-muted mb-0">Email: {{$seller->email}}</p>
+                        @endif
+                        @if ($seller->phone)
+                            <p class="font-size-ms text-muted mb-0">Teléfono: {{$seller->phone}}</p>
+                        @endif
+                        @if ($seller->cellphone)
+                            <p class="font-size-ms text-muted mb-0">Celular: {{$seller->cellphone}}</p>
+                        @endif
+                        <br>
+                    @endif
+                      @if($seller->web)
+                        <h6>Web</h6>
+                        <a 
+                            class="font-size-ms text-muted" 
+                            target="_blank"
+                            @if (Illuminate\Support\Str::startsWith($seller->web, 'https://') || Illuminate\Support\Str::startsWith($seller->web, 'http://',))
+                                href="{{ $seller->web }}" 
+                            @else
+                                href="{{ 'https://' . $seller->web }}" 
+                            @endif
+                        >
+                            {{$seller->web}}
+                        </a>
+                        <br>
+                        <br>
+                    @endif
+                    
+                    @if($seller->contacts_data)
+                        <h6>Redes Sociales</h6>
+                            @foreach($seller->contacts_data as $socialMedia)
+                                <a 
+                                    class="font-size-ms text-muted" 
+                                    target="_blank"
+                                    @if (Illuminate\Support\Str::startsWith($socialMedia['url'], 'https://') || Illuminate\Support\Str::startsWith($socialMedia['url'], 'http://')) 
+                                        href="{{ $socialMedia['url'] }}" 
+                                    @else
+                                        href="{{ 'https://' . $socialMedia['url'] }}" 
+                                    @endif
+                                >
+                                    {{$socialMedia['url']}}
+                                </a>                    
+                            @endforeach
+                        <br>
+                        <br>
+                    @endif
+                    @if ($seller->privacy_policy || $seller->shipping_policy || $seller->return_policy)
+                        <h6>Políticas</h6>
+                    @endif
+
                     @if($seller->privacy_policy)
                         <a href="#" data-toggle="modal" data-policy="privacy_policy" data-target="#policy" class="font-size-ms text-muted go-policy">Políticas de privacidad</a>
                         <br>

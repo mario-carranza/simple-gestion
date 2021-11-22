@@ -113,7 +113,8 @@ class OrderUpdated extends Mailable
                     }
 
                     // “Próximamente estaremos notificando la fecha de envío” cambiar por
-                    $this->shippingMessage = '“*Por evento Cyber las fechas de envío podrían variar, estaremos notificando la fecha de envío”';
+                    //$this->shippingMessage = '“*Por evento Cyber las fechas de envío podrían variar, estaremos notificando la fecha de envío”';
+                    $this->shippingMessage = '';
                 }else{
                     $this->title = '¡Nueva orden generada!';
 

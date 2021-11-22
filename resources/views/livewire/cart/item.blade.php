@@ -96,14 +96,17 @@ $product = $item->product;
                 //'parentListener' => 'setQty' implicit
                 ])
             </div>
-            @if ($confirm == $item->id)
+            {{--@if ($confirm == $item->id)
                 <button wire:click.prevent="delete" class="btn btn-link px-0 text-danger" type="button"><i
                         class="czi-trash mr-2"></i><span class="font-size-sm">Eliminar</span></button>
             @else
                 <button wire:click.prevent="deleteConfirm({{ $item->id }})" class="btn btn-link px-0 text-danger"
                     type="button"><i class="czi-close-circle mr-2"></i><span
                         class="font-size-sm">Eliminar</span></button>
-            @endif
+            @endif--}}
+            <button wire:click.prevent="delete()" class="btn btn-link px-0 text-danger"
+                type="button"><i class="czi-close-circle mr-2"></i><span
+                    class="font-size-sm">Eliminar</span></button>
 
         </div>
 

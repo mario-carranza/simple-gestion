@@ -141,6 +141,48 @@
                                     </div>
                                 </div>
                                 @endif
+
+                                <p> Información sobre el vendedor </p>
+                                @if($product->seller->addresses)
+                                    @php
+                                        $sellerAddress = $product->seller->addresses[0];
+                                    @endphp
+                                    <small><strong>Dirección</strong></small>
+                                    @if($sellerAddress->commune_id)
+                                        <p class="font-size-ms text-muted mb-0">Comuna: {{\App\Models\Commune::find($sellerAddress->commune_id)->name}}</p>
+                                    @endif
+                                    @if($sellerAddress->street)
+                                        <p class="font-size-ms text-muted mb-0">Calle: {{$sellerAddress->street}}</p>
+                                    @endif
+                                    @if($sellerAddress->number)
+                                        <p class="font-size-ms text-muted mb-0">Número: {{$sellerAddress->number}}</p>
+                                    @endif
+                                    @if($sellerAddress->subnumber)
+                                        <p class="font-size-ms text-muted mb-0">Casa/Dpto/Oficina: {{$sellerAddress->subnumber}}</p>
+                                    @endif
+                                    @if ($product->seller->email)
+                                        <p class="font-size-ms text-muted mb-0">Email: {{$product->seller->email}}</p>
+                                    @endif
+                                    @if ($product->seller->phone)
+                                        <p class="font-size-ms text-muted mb-0">Teléfono: {{$product->seller->phone}}</p>
+                                    @endif
+                                    @if ($product->seller->cellphone)
+                                        <p class="font-size-ms text-muted mb-0">Celular: {{$product->seller->cellphone}}</p>
+                                    @endif
+                                    <br>
+                                @endif
+                                <small>
+                                    <p>Métodos de envíos disponibles (puede variar de acuerdo a la comuna):</p>
+                                    <ul>
+                                        @foreach($product->seller->getResumeAvailableShippingMethods() as $method)
+                                            <li>{{$method->title}}</li>
+                                        @endforeach
+                                    </ul>
+                                </small>
+                                @if(isset($product->seller->maximun_days_for_shipped) && $product->seller->maximun_days_for_shipped > 0)
+                                    <p><small>Cantidad de días máximo para envío del producto: {{$product->seller->maximun_days_for_shipped}}</small></p>
+                                @endif
+
                                 <!--
                                     <div class="d-flex mb-4">
                                         <div class="w-100 mr-3">

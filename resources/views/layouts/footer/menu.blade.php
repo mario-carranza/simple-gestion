@@ -65,8 +65,8 @@
                     </ul>
                 </div>
             </div> --}}
-            <div class="col-md-12 mb-4">
-                <img class="img-fluid" src="{{ asset('img/logos/footer.png') }}" alt="Footer" />
+            <div class="col-md-12 mb-4 d-none d-md-flex justify-content-center">
+                <img class="img-fluid w-75" src="{{ asset('img/logos/footer.png') }}" alt="Footer" />
 
                 {{-- <div class="widget pb-2 mb-2">
                     <h3 class="widget-title text-dark pb-1">Organizan</h3>
@@ -129,6 +129,9 @@
                         <div class="mb-2"><a class="btn-market btn-google" href="#" role="button"><span class="btn-market-subtitle">Download on the</span><span class="btn-market-title">Google Play</span></a></div>
                     </div>
                 </div> --}}
+            </div>
+            <div class="col-md-12 mb-4 d-block d-sm-block d-md-none">
+                <img class="img-fluid" src="{{ asset('img/logos/footer_mobile.png') }}" alt="Footer" />
             </div>
         </div>
     </div>
@@ -203,6 +206,7 @@
                         </ul>
                         <span class="font-size-md text-light"><a href="mailto:contigopyme@crcpvalpo.cl">contigopyme@crcpvalpo.cl</a></span>
                     </div>
+                    <span class="font-size-md text-light"><a href="tel:+56322354000">(+56) 32 235 4000</a></span>
                 </div>
                 <div class="col-md-6 text-center text-md-right mb-4">
                     <div class="mb-3">

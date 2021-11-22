@@ -61,15 +61,27 @@
             @error('data.address_office') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
         <div class="col-sm-6 form-group">
+            <label for="sd-region">Región <span class='text-danger'>*</span></label>
+            <select class="custom-select" wire:model="data.address_region_id" id="sd-region">
+                <option value>Seleccione una región</option>
+                @foreach (\App\Models\Region::orderBy('name', 'asc')->get(['id', 'name']) as $region)
+                    <option value="{{ $region->id }}">{{ $region->name }}</option>
+                @endforeach
+            </select>
+            @error('data.address_region_id') <small class="text-danger">{{ $message }}</small> @enderror
+        </div>
+        @if(isset($communes) && $communes->count() > 0)
+        <div class="col-sm-6 form-group">
             <label for="sd-commune">Comuna <span class='text-danger'>*</span></label>
             <select class="custom-select" wire:model="data.address_commune_id" id="sd-commune">
                 <option value>Seleccione una comuna</option>
-                @foreach (\App\Models\Commune::orderBy('name', 'asc')->get(['id', 'name']) as $commune)
+                @foreach ($communes as $commune)
                     <option value="{{ $commune->id }}">{{ $commune->name }}</option>
                 @endforeach
             </select>
             @error('data.address_commune_id') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
+        @endif
         <div class="col-sm-6 form-group">
             <label for="sd-cellphone">Teléfono móvil<span class='text-danger'>*</span></label>
             <input class="form-control" type="text" placeholder="" wire:model="data.cellphone" id="sd-cellphone">
@@ -172,15 +184,27 @@
                 @error('invoice.address_office') <small class="text-danger">{{ $message }}</small> @enderror
             </div>
             <div class="col-sm-6 form-group">
-                <label for="bd-commune">Comuna <span class='text-danger'>*</span></label>
-                <select class="custom-select" wire:model="invoice.address_commune_id" id="bd-commune">
+                <label for="sd-region">Región <span class='text-danger'>*</span></label>
+                <select class="custom-select" wire:model="invoice.address_region_id" id="sd-region">
+                    <option value>Seleccione una región</option>
+                    @foreach (\App\Models\Region::orderBy('name', 'asc')->get(['id', 'name']) as $region)
+                        <option value="{{ $region->id }}">{{ $region->name }}</option>
+                    @endforeach
+                </select>
+                @error('invoice.address_region_id') <small class="text-danger">{{ $message }}</small> @enderror
+            </div>
+            @if(isset($invoiceCommunes) && $invoiceCommunes->count() > 0)
+            <div class="col-sm-6 form-group">
+                <label for="sd-commune">Comuna <span class='text-danger'>*</span></label>
+                <select class="custom-select" wire:model="invoice.address_commune_id" id="sd-commune">
                     <option value>Seleccione una comuna</option>
-                    @foreach (\App\Models\Commune::orderBy('name', 'asc')->get(['id', 'name']) as $commune)
+                    @foreach ($invoiceCommunes as $commune)
                         <option value="{{ $commune->id }}">{{ $commune->name }}</option>
                     @endforeach
                 </select>
                 @error('invoice.address_commune_id') <small class="text-danger">{{ $message }}</small> @enderror
             </div>
+            @endif
             <div class="col-sm-6 form-group">
                 <label for="bd-cellphone">Teléfono móvil<span class='text-danger'>*</span></label>
                 <input class="form-control" type="text" placeholder="" wire:model="invoice.cellphone" id="bd-cellphone">

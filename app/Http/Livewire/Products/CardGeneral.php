@@ -147,6 +147,14 @@ class CardGeneral extends Component
         $baseQuery->selectRaw('*');
         $baseQuery->selectRaw('id as aux_id');
         $baseQuery->selectRaw('(CASE
+        WHEN (visible_from IS NULL AND visible_to IS NULL) THEN 1
+        WHEN (visible_from IS NOT NULL AND visible_to IS NULL) AND (visible_from <= CURDATE()) THEN 1
+        WHEN (visible_to IS NOT NULL AND visible_from IS NULL) AND (visible_to >= CURDATE()) THEN 1
+        WHEN (visible_from IS NOT NULL AND visible_to IS NOT NULL) AND (visible_from <= CURDATE() AND  CURDATE() <= visible_to) THEN 1
+        ELSE 0
+        END)  
+        AS should_show');
+        $baseQuery->selectRaw('(CASE
         WHEN product_type_id = 2 THEN (SELECT MAX(
             CASE
             WHEN special_price IS NULL THEN price
@@ -161,6 +169,8 @@ class CardGeneral extends Component
         ELSE price 
         END)  
         AS current_price');
+
+        $baseQuery->having('should_show', '>=', 1);
         
         // Filter
         $filterService = new ProductFilterService();

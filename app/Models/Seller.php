@@ -77,6 +77,7 @@ class Seller extends Model
         'user_id',
         'company_id',
         'slug',
+        'maximun_days_for_shipped',
     ];
 
     protected $hidden = [
@@ -141,6 +142,16 @@ class Seller extends Model
         }
 
         return $shippingConfig->getAvailableShippingMethodCodes();
+    }
+
+    public function getResumeAvailableShippingMethods()
+    {
+        $availableShippingMethods = CommuneShippingMethod::where([ 'seller_id' => $this->id ])->get()->map(function($communeShippingMethod) {
+            return $communeShippingMethod->getAvailableShippingMethodCodes();
+        })->flatten()->unique();
+        $finalMethods = ShippingMethod::whereIn('code', $availableShippingMethods)->where('status', 1)->get();
+        
+        return $finalMethods;
     }
 
     /*

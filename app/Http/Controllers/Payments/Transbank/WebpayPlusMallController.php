@@ -264,13 +264,16 @@ class WebpayPlusMallController extends Controller
             //Order to seller
             foreach ($sellers as $seller) {
                 Mail::to($seller->email)->cc('jorge.castro@twgroup.cl')->send(new OrderUpdated($order, 2, $seller));
+                sleep(1);
             }
             //Order to admins
             $administrators = Setting::get('administrator_email');
             $recipients = explode(';', $administrators);
             foreach ($recipients as $key => $recipient) {
                 Mail::to($recipient)->send(new OrderUpdated($order, 3, null));
+                sleep(1);
             }
+            sleep(1);
 
 
             return view('payments.transbank.webpay.mall.complete', compact('result', 'order'));

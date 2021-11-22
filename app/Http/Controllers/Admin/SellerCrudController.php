@@ -550,6 +550,16 @@ class SellerCrudController extends CrudController
         ]);
 
         CRUD::addField([
+            'name' => 'maximun_days_for_shipped',
+            'label' => 'Cantidad de días máximo para ser enviado un paquete',
+            'type' => 'number',
+            'tab' => 'Políticas',
+            'wrapper' => [
+                'class' => 'form-group col-md-2'
+            ],
+        ]);
+
+        CRUD::addField([
             'name' => 'slug',
             'type' => 'text',
             'label' => 'Slug',

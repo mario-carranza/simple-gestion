@@ -113,6 +113,44 @@
                             </div>
                         </div>
                         @endif
+                        <p> Información sobre el vendedor </p>
+                        @if($parentProduct->seller->addresses)
+                            @php
+                                $sellerAddress = $parentProduct->seller->addresses[0];
+                            @endphp
+                            <small><strong>Dirección</strong></small>
+                            @if($sellerAddress->commune)
+                                <p class="font-size-ms text-muted mb-0">Comuna: {{$sellerAddress->commune->name}}</p>
+                            @endif
+                            @if($sellerAddress->street)
+                                <p class="font-size-ms text-muted mb-0">Calle: {{$sellerAddress->street}}</p>
+                            @endif
+                            @if($sellerAddress->number)
+                                <p class="font-size-ms text-muted mb-0">Número: {{$sellerAddress->number}}</p>
+                            @endif
+                            @if($sellerAddress->subnumber)
+                                <p class="font-size-ms text-muted mb-0">Casa/Dpto/Oficina: {{$sellerAddress->subnumber}}</p>
+                            @endif
+                            @if($sellerAddress->email)
+                                <p class="font-size-ms text-muted mb-0">Email: {{$sellerAddress->email}}</p>
+                            @endif
+                            @if($sellerAddress->cellphone)
+                                <p class="font-size-ms text-muted mb-0">Tél.: {{$sellerAddress->cellphone}} </p>
+                            @endif
+                            @if($sellerAddress->phone)
+                                <p class="font-size-ms text-muted mb-0">Tél.: {{$sellerAddress->phone}} </p>
+                            @endif
+                            <br>
+                        @endif
+                        <small>
+                            <p>Métodos de envíos disponibles (puede variar de acuerdo a la comuna):</p>
+
+                            <ul>
+                                @foreach($parentProduct->seller->getResumeAvailableShippingMethods() as $method)
+                                    <li>{{$method->title}}</li>
+                                @endforeach
+                            </ul>
+                        </small>
                         <!--
                             <div class="d-flex mb-4">
                                 <div class="w-100 mr-3">
