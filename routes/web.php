@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 
 /* Subdomain sections routes */
-Route::name('section.')->domain('{section}.simple-gestion.test')->group(function () {
+Route::name('section.')->domain('{section}.' . config('simplegestion.app_top_domain'))->group(function () {
     Route::get("/", 'Frontend\SectionController@index')->name("index");
     Route::get('/search-products/{category}/{product}', 'Frontend\SectionController@searchProduct')->name('category.search.product');
     Route::get('/search-products/{category}', 'Frontend\SectionController@getProductsByCategorySlug')->name('category.products');
