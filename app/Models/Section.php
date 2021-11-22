@@ -22,6 +22,9 @@ class Section extends Model
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
+    protected $casts = [
+        'json_value' => 'array',
+    ];
 
     /*
     |--------------------------------------------------------------------------
@@ -50,6 +53,19 @@ class Section extends Model
     | ACCESSORS
     |--------------------------------------------------------------------------
     */
+    public function getStatusDescriptionAttribute()
+    {
+        switch ($this->status) {
+            case 1:
+                return 'Activo';
+                break;
+            case 0:
+                return 'Inactivo';
+                break;
+            default:
+                break;
+        }
+    }
 
     /*
     |--------------------------------------------------------------------------

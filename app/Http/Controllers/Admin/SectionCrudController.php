@@ -28,7 +28,9 @@ class SectionCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Section::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/section');
-        CRUD::setEntityNameStrings('section', 'sections');
+        CRUD::setEntityNameStrings('sección', 'secciones');
+
+        $this->crud->denyAccess('show');
     }
 
     /**
@@ -50,9 +52,21 @@ class SectionCrudController extends CrudController
         ]);
 
         CRUD::addColumn([
-            'name' => 'status',
+            'name' => 'status_description',
             'label' => 'Estado',
+            'type' => 'text',
+            'wrapper' => [
+                'element' => 'span',
+                'class' => function ($crud, $column, $entry, $related_key) {
+                    if ($column['text'] == 'Activo') {
+                        return 'badge badge-success';
+                    }
+                    return 'badge badge-default';
+                },
+            ],
         ]);
+
+        $this->setupFilters();
     }
 
     /**
@@ -110,5 +124,47 @@ class SectionCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function setupFilters()
+    {
+        CRUD::addFilter([
+            'name' => 'name',
+            'type' => 'select2',
+            'label' => 'Nombre',
+        ], function () {
+            return $this->crud->getModel()::all()->pluck('name', 'id')->toArray();
+        }, function ($value) {
+            $this->crud->addClause('where', 'id', $value);
+        });
+
+        CRUD::addFilter(
+            [
+            'name' => 'slug',
+            'type' => 'select2',
+            'label' => 'Slug',
+        ],
+            function () {
+                return $this->crud->getModel()::all()->pluck('slug', 'id')->toArray();
+            },
+            function ($value) {
+                $this->crud->addClause('where', 'id', $value);
+            }
+        );
+
+        CRUD::addFilter(
+            [
+            'name' => 'is_active',
+            'type' => 'dropdown',
+            'label' => 'Estado',
+        ],
+            [
+            0 => 'Inactivo',
+            1 => 'Activo',
+        ],
+            function ($value) {
+                $this->crud->addClause('where', 'status', $value);
+            }
+        );
     }
 }
