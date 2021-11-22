@@ -22,7 +22,7 @@ class SectionController extends Controller
 
     public function __construct()
     {
-        $this->section = Section::where('slug', explode('/', request()->url())[3])->first();
+        $this->section = Section::where('slug', request()->route('section'))->first();
 
         $this->viewPath = $this->section->view_path === 'default' 
                                 ? ''
@@ -99,7 +99,7 @@ class SectionController extends Controller
         $render = ['view' => 'searchCategory'];
         $data = ['category' => $request->category];
 
-        return view('shop-grid', compact('render', 'data'));
+        return view("$this->viewPath.shop-grid", compact('render', 'data'));
     }
 
     public function getProductsByCategorySlug(Request $request)

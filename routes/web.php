@@ -15,12 +15,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return redirect(backpack_url('dashboard'));
-// });
 
+/* Subdomain sections routes */
+Route::name('section.')->domain('{section}.simple-gestion.test')->group(function () {
+    Route::get("/", 'Frontend\SectionController@index')->name("index");
+    Route::get('/shop-grid', 'Frontend\SectionController@getProductsByCategory')->name("shop-grid");;
+
+});
+
+/* Domain routes */
 Route::get('/', 'Frontend\HomeController@index')->name('index');
-
 Route::get('/customer/sign', 'Frontend\CustomerController@sign')->name('customer.sign')->middleware(['guest']);
 Route::post('/customer/register', 'Frontend\CustomerController@store')->name('customer.frontend.store');
 Route::post('/customer/login', 'Frontend\CustomerController@authenticate')->name('customer.frontend.login');
@@ -78,7 +82,6 @@ Route::get('/terms-conditions', function () {
     return view('terms-conditions');
 });
 
-//Auth::routes();
 Route::redirect('/login', '/customer/login')->name('login');
 
 Route::get('/shopping-cart', 'Frontend\CartController@shoppingCart')->name('shopping-cart');
@@ -99,12 +102,3 @@ Route::group([
     Route::get('webpay/mall/download/{order}', 'Payments\Transbank\WebpayPlusMallController@download')->name('transbank.webpayplus.mall.download');
     Route::get('test/{order}', 'Payments\Transbank\WebpayPlusMallController@test')->name('transbank.test.view');
 });
-
-if (\Illuminate\Support\Facades\Schema::hasTable('sections')) {
-    $sections = Section::where('status', 1)->get();
-
-    foreach ($sections as $section) {
-        Route::get("/$section->slug", 'Frontend\SectionController@index')->name("section.$section->slug.index");
-        Route::get("/$section->slug/shop-grid/", 'Frontend\SectionController@getProductsByCategory')->name("section.$section->slug.shop-grid");;
-    }
-}
