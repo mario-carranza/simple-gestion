@@ -198,10 +198,13 @@
     <div class="d-none d-lg-block d-md-block d-sm-block cz-carousel cz-dots-enabled">
         <div class="cz-carousel-inner" data-carousel-options='{"autoplay": true, "autoHeight": true, "autoplayTimeout": 5000}'>
             <a href="http://www.radiovalparaiso.cl/" target="_blank" class="border border-white">
-                <img src="{{ asset('img/prolibro/banner-radio-valparaiso.jpg') }}" alt="Banner Suscripcion Mercurio" class="img-fluid w-100">
+                <img src="{{ asset('img/prolibro/banner-radio-valparaiso.jpg') }}" alt="" class="img-fluid w-100">
             </a>
             <a href="https://www.tiendaclubdelectores.cl/tienda/club_de_lectores/busqueda/?query=&categoria=clasificados&offset=0&orden=fecha&dir_orden=descending&user_id=&contacto=club_de_lectores&cat=/Libros/" target="_blank" class="border border-white">
-                <img src="{{ asset('img/prolibro/banner-mercurio-pc.jpg') }}" alt="Banner Suscripcion Mercurio" class="img-fluid w-100">
+                <img src="{{ asset('img/prolibro/banner-mercurio-pc.jpg') }}" alt="" class="img-fluid w-100">
+            </a>
+            <a href="https://www.cooperativa.cl/" target="_blank" class="border border-white">
+                <img src="{{ asset('img/prolibro/cooperativa-pc.gif') }}" alt="" class="img-fluid w-100">
             </a>
             {{-- <img src="{{ asset('img/prolibro/banner-medio-prolibro.jpg') }}" alt="Prolibro Banner" class="img-fluid"> --}}
         </div>
@@ -212,10 +215,14 @@
             <div  class="cz-carousel-inner mh-75 h-75 cz-dots-enabled">
                 <div class="cz-carousel-inner" data-carousel-options='{"autoplay": true, "autoHeight": false, "autoplayTimeout": 5000}'>
                     <a href="http://www.radiovalparaiso.cl/" target="_blank" class="border border-white">
-                        <img src="{{ asset('img/prolibro/banner-radio-valparaiso.jpg') }}" alt="Banner Suscripcion Mercurio" class="img-fluid w-100">
+                        <img src="{{ asset('img/prolibro/banner-radio-valparaiso.jpg') }}" alt="" class="img-fluid w-100">
                     </a>
                     <a href="https://www.tiendaclubdelectores.cl/tienda/club_de_lectores/busqueda/?query=&categoria=clasificados&offset=0&orden=fecha&dir_orden=descending&user_id=&contacto=club_de_lectores&cat=/Libros/" target="_blank" class="border border-white">
-                        <img src="{{ asset('img/prolibro/banner-mercurio-movil.jpg') }}" alt="Banner Suscripcion Mercurio" class="img-fluid w-100">
+                        <img src="{{ asset('img/prolibro/banner-mercurio-movil.jpg') }}" alt="" class="img-fluid w-100">
+                    </a>
+
+                    <a href="https://www.cooperativa.cl/" target="_blank" class="border border-white">
+                        <img src="{{ asset('img/prolibro/cooperativa-movil.gif') }}" alt="" class="img-fluid w-100">
                     </a>
                 </div>
             </div>
