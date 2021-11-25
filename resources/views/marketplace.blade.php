@@ -13,7 +13,10 @@
                 <img src="{{ asset('img/slides/slide-1-pc.jpg') }}" alt="Prolibro Banner" class="w-100">
             </a> --}}
             <img src="{{ asset('img/prolibro/banner-inicio-1-pc.jpg') }}" alt="Prolibro Banner">
-            <img src="{{ asset('img/prolibro/banner-inicio-2-pc.jpg') }}" alt="Prolibro Banner">
+            
+            <a href="https://actividades.prolibro.cl/">
+                <img src="{{ asset('img/prolibro/banner-inicio-2-pc.jpg') }}" alt="Prolibro Banner">
+            </a>
             {{-- <img src="{{ asset('img/prolibro/banner-principal-prolibro.jpg') }}" alt="Prolibro Banner">
             <img src="{{ asset('img/prolibro/banner-principal-prolibro.jpg') }}" alt="Prolibro Banner">
             <img src="{{ asset('img/prolibro/banner-principal-prolibro-2.jpg') }}" alt="Prolibro Banner"> --}}
@@ -33,7 +36,10 @@
         <div  class="cz-carousel-inner mh-75 h-75 cz-dots-enabled" style="max-height: 285px">
             <div class="cz-carousel-inner" data-carousel-options='{"autoplay": true, "autoHeight": false, "autoplayTimeout": 4000}'>
                 <img src="{{ asset('img/prolibro/banner-inicio-1-movil.jpg') }}" alt="Prolibro Banner">
-                <img src="{{ asset('img/prolibro/banner-inicio-2-movil.jpg') }}" alt="Prolibro Banner">
+                
+                <a href="https://actividades.prolibro.cl/">
+                    <img src="{{ asset('img/prolibro/banner-inicio-2-movil.jpg') }}" alt="Prolibro Banner">
+                </a>
                 {{-- <img src="{{ asset('img/prolibro/mobile-banner-principal-feria.jpg') }}" alt="Prolibro Banner"> --}}
                 {{-- <a href="{{ route('featured.products') }}">
                     <img src="{{ asset('img/slides/slide-1-mobile.jpg') }}" alt="Prolibro Banner" class="w-100">
