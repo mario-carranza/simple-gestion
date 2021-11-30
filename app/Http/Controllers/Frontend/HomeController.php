@@ -134,4 +134,9 @@ class HomeController extends Controller
         $filterService = new ProductFilterService();
         $filterService->filterByParams($request);
     }
+
+    public function travel()
+    {
+        return view('landing.travel');
+    }
 }

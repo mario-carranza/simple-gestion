@@ -491,7 +491,7 @@ class Chilexpress
             $originCoverages = $this->service->coverage($this->states[$originState]);
         }catch(Exception $e){
             $result['is_available'] = false;
-            $result['message'] =  'No disponible temporalmente, seleccione otro método de envio si es posible';
+            $result['message'] =  'No disponible temporalmente para la comuna del vendedor, seleccione otro método de envio si es posible';
             return $result;
         }
 
@@ -534,7 +534,7 @@ class Chilexpress
             $destineCoverages = $this->service->coverage($this->states[$destineState]);
         }catch(Exception $e){
             $result['is_available'] = false;
-            $result['message'] =  'No disponible temporalmente, seleccione otro método de envio si es posible';
+            $result['message'] =  'No disponible temporalmente para la comuna de destino, seleccione otro método de envio si es posible';
             return $result;
         }
 

@@ -79,6 +79,7 @@
                         <li class="nav-item active"><a class="nav-link" href="{{ url('/') }}">Inicio</a></li>
                         <li class="nav-item active"><a class="nav-link" href="{{ route('seller.sign') }}">Quiero vender</a></li>
                         <li class="nav-item active"><a class="nav-link" href="{{ route('customer.sign') }}">Quiero comprar</a></li>
+                        <li class="nav-item active"><a class="nav-link" href="{{ route('landing.travel') }}">Turismo rural</a></li>
                         {{-- <li class="nav-item dropdown active"><a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Inicio</a>
                             <ul class="dropdown-menu">
                                 <li class="dropdown position-static mb-0"><a class="dropdown-item py-2 border-bottom" href="home-fashion-store-v1.html"><span class="d-block text-heading">Fashion
