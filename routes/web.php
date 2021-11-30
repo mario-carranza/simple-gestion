@@ -31,6 +31,7 @@ Route::get('/customer/reset/{token}', 'Frontend\CustomerController@reset')->name
 Route::get('/customer/exit', 'Frontend\CustomerController@logout')->name('exit');
 Route::get('/support', 'Frontend\CustomerController@support')->name('customer.support');
 Route::post('/support', 'Frontend\CustomerController@createIssue')->name('customer.support.create');
+Route::get('/turismo-rural', 'Frontend\HomeController@travel')->name('landing.travel');
 
 Route::middleware(['auth'])->group(function () {
     Route::put('/customer/{customer}', 'Frontend\CustomerController@update')->name('customer.update');
