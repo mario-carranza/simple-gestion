@@ -121,7 +121,7 @@
                         @if( ! empty(Setting::get('featured_page_title')))
                             <li class="nav-item active"><a class="nav-link" href="{{ url('/featured-products') }}">{{ Setting::get('featured_page_title') }}</a></li>
                         @endif
-                        <li class="nav-item active"><a class="nav-link" href="https://actividades.prolibro.cl/wp-content/uploads/2021/11/Programa-Cultural.pdf" target="_blank" >Programa Cultural</a></li>
+                        <li class="nav-item active"><a class="nav-link" href="https://actividades.prolibro.cl/wp-content/uploads/2021/12/Programa-Cultural.pdf" target="_blank" >Programa Cultural</a></li>
                         {{-- <li class="nav-item dropdown active"><a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Inicio</a>
                             <ul class="dropdown-menu">
                                 <li class="dropdown position-static mb-0"><a class="dropdown-item py-2 border-bottom" href="home-fashion-store-v1.html"><span class="d-block text-heading">Fashion
