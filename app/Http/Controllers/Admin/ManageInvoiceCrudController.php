@@ -247,7 +247,6 @@ class ManageInvoiceCrudController extends CrudController
             return redirect()->action([self::class, 'index'], ['invoice' => $invoice->id]);
         }
 
-        dd($response);
         \Alert::add('warning', 'Hubo algun problema al generar el documento.')->flash();
         return redirect()->action([self::class, 'index'], ['invoice' => $invoice]);
 
@@ -391,7 +390,7 @@ class ManageInvoiceCrudController extends CrudController
 
            return redirect()->route('invoice.get-pdf', ['invoice' => $invoice, 'tipoPapel' => $tipoPapel]);
         }
-        dd($response);
+
         \Alert::add('warning', 'Hubo algun problema al generar el documento.')->flash();
         return redirect()->action([self::class, 'index'], ['invoice' => $invoice]);
     }
