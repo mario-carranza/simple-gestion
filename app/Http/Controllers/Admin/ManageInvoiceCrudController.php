@@ -152,6 +152,7 @@ class ManageInvoiceCrudController extends CrudController
             return redirect()->action([self::class, 'index'], ['invoice' => $invoice->id]);
         }
 
+        dd($response);
         \Alert::add('warning', 'Hubo algun problema al generar el documento.')->flash();
         return redirect()->action([self::class, 'index'], ['invoice' => $invoice]);
 
