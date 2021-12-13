@@ -9,24 +9,24 @@
 <div class="d-none d-lg-block d-md-block d-sm-block">
     <div class="cz-carousel cz-dots-enabled" style="max-height:450px">
         <div class="cz-carousel-inner" data-carousel-options='{"autoplay": true, "autoHeight": false, "autoplayTimeout": 4000}' style="max-height:450px">
-            {{-- <a href="{{ route('featured.products') }}">
+            <a href="{{ route('featured.products') }}">
                 <img src="{{ asset('img/slides/slide-1-pc.jpg') }}" alt="Prolibro Banner" class="w-100">
-            </a> --}}
-            <img src="{{ asset('img/prolibro/banner-inicio-1-pc.jpg') }}" alt="Prolibro Banner">
+            </a>
+            <img src="{{ asset('img/prolibro/banner-principal-prolibro-2.jpg') }}" alt="Prolibro Banner">
+            {{-- <img src="{{ asset('img/prolibro/banner-inicio-1-pc.jpg') }}" alt="Prolibro Banner">
             
             <a href="https://actividades.prolibro.cl/">
                 <img src="{{ asset('img/prolibro/banner-inicio-2-pc.jpg') }}" alt="Prolibro Banner">
-            </a>
-            {{-- <img src="{{ asset('img/prolibro/banner-principal-prolibro.jpg') }}" alt="Prolibro Banner">
-            <img src="{{ asset('img/prolibro/banner-principal-prolibro.jpg') }}" alt="Prolibro Banner">
-            <img src="{{ asset('img/prolibro/banner-principal-prolibro-2.jpg') }}" alt="Prolibro Banner"> --}}
+            </a> --}}
+            {{-- <img src="{{ asset('img/prolibro/banner-principal-prolibro.jpg') }}" alt="Prolibro Banner"> --}}
+            {{-- <img src="{{ asset('img/prolibro/banner-principal-prolibro.jpg') }}" alt="Prolibro Banner"> --}}
             {{--<a href="https://zoom.us/j/91004913743?pwd=MkFGT25xWUhZMVpCY2lEUHQyUGpXQT09" target="_blank">
                 <img src="{{ asset('img/prolibro/banner-principal-seminario.jpg') }}" alt="Seminario internacional de Literatura infantile" class="w-100">
-            </a>--}}
-            {{-- <a href="https://filsaenvivo.com/" target="_blank">
+            </a>
+            <a href="https://filsaenvivo.com/" target="_blank">
                 <img src="{{ asset('img/filsa/banner-transmision-carousel.jpg') }}" alt="Prolibro Banner" class="w-100">
             </a> --}}
-        </div>
+        </div> 
     </div>
 </div>
 
@@ -35,21 +35,21 @@
     <div class="cz-carousel">
         <div  class="cz-carousel-inner mh-75 h-75 cz-dots-enabled" style="max-height: 285px">
             <div class="cz-carousel-inner" data-carousel-options='{"autoplay": true, "autoHeight": false, "autoplayTimeout": 4000}'>
-                <img src="{{ asset('img/prolibro/banner-inicio-1-movil.jpg') }}" alt="Prolibro Banner">
+                {{-- <img src="{{ asset('img/prolibro/banner-inicio-1-movil.jpg') }}" alt="Prolibro Banner"> --}}
                 
-                <a href="https://actividades.prolibro.cl/">
+                {{-- <a href="https://actividades.prolibro.cl/">
                     <img src="{{ asset('img/prolibro/banner-inicio-2-movil.jpg') }}" alt="Prolibro Banner">
-                </a>
+                </a> --}}
                 {{-- <img src="{{ asset('img/prolibro/mobile-banner-principal-feria.jpg') }}" alt="Prolibro Banner"> --}}
-                {{-- <a href="{{ route('featured.products') }}">
+                <a href="{{ route('featured.products') }}">
                     <img src="{{ asset('img/slides/slide-1-mobile.jpg') }}" alt="Prolibro Banner" class="w-100">
                 </a>
-                <img src="{{ asset('img/prolibro/mobile-banner-principal-prolibro.jpg') }}" alt="Prolibro Banner">
-                <img src="{{ asset('img/prolibro/mobile-banner-principal-prolibro-2.jpg') }}" alt="Prolibro Banner"> --}}
-                {{--a href="https://zoom.us/j/91004913743?pwd=MkFGT25xWUhZMVpCY2lEUHQyUGpXQT09" target="_blank">
+                {{-- <img src="{{ asset('img/prolibro/mobile-banner-principal-prolibro.jpg') }}" alt="Prolibro Banner"> --}}
+                <img src="{{ asset('img/prolibro/mobile-banner-principal-prolibro-2.jpg') }}" alt="Prolibro Banner">
+                {{-- <a href="https://zoom.us/j/91004913743?pwd=MkFGT25xWUhZMVpCY2lEUHQyUGpXQT09" target="_blank">
                     <img src="{{ asset('img/prolibro/mobile-banner-principal-seminario.jpg') }}" alt="Seminario internacional de Literatura infantile" class="w-100">
-                </a>--}}
-                {{-- <a href="https://filsaenvivo.com/" target="_blank">
+                </a>
+                <a href="https://filsaenvivo.com/" target="_blank">
                     <img src="{{ asset('img/filsa/mobile-banner-transmision-carousel.jpg') }}" alt="Filsa Banner" class="w-100">
                 </a> --}}
             </div>
@@ -126,9 +126,9 @@
                {{--  <a href="http://www.clubmercuriovalpo.cl/suscripciones/" target="_blank" class="border border-white">
                     <img src="{{ asset('img/prolibro/banner-suscripcion-mercurio.jpg') }}" alt="Banner Suscripcion Mercurio" class="">
                 </a> --}}
-                {{-- <img src="{{ asset('img/prolibro/banner-medio-prolibro.jpg') }}" alt="Banner Prolibro" class="">
-                <img src="{{ asset('img/prolibro/banner-medio-prolibro-2.jpg') }}" alt="Banner Prolibro" class=""> --}}
-                <a href="https://www.tiendacopec.cl/collections/libros-viva-leer?utm_source=pro_libro&utm_medium=display&utm_campaign=programa_viva_leer&utm_id=programa_viva_leer&utm_term=programa_viva_leer_pro_libro_banner&utm_content=programa_viva_leer_pro_libro_banner">
+                <img src="{{ asset('img/prolibro/banner-medio-prolibro.jpg') }}" alt="Banner Prolibro" class="">
+                <img src="{{ asset('img/prolibro/banner-medio-prolibro-2.jpg') }}" alt="Banner Prolibro" class="">
+                {{-- <a href="https://www.tiendacopec.cl/collections/libros-viva-leer?utm_source=pro_libro&utm_medium=display&utm_campaign=programa_viva_leer&utm_id=programa_viva_leer&utm_term=programa_viva_leer_pro_libro_banner&utm_content=programa_viva_leer_pro_libro_banner">
                     <img src="{{ asset('img/prolibro/copec-pc.png') }}" alt="Banner Prolibro" class="">
                 </a>
                 <a href="https://www.prolibro.cl/seller-shop/26">
@@ -141,7 +141,7 @@
 
                 <a href="https://www.prolibro.cl/seller-shop/22">
                     <img src="{{ asset('img/prolibro/megalibros-pc.jpg') }}" alt="Banner Prolibro" class="">
-                </a>
+                </a> --}}
             </div>
         </div>
     </div>
@@ -153,9 +153,9 @@
                    {{--  <a href="http://www.clubmercuriovalpo.cl/suscripciones/" target="_blank" class="border border-white">
                         <img src="{{ asset('img/prolibro/banner-suscripcion-mercurio.jpg') }}" alt="Banner Suscripcion Mercurio" class="img-fluid ">
                     </a> --}}
-                    {{-- <img src="{{ asset('img/prolibro/mobile-banner-medio-prolibro.jpg') }}" alt="Prolibro Banner" class="img-fluid">
-                    <img src="{{ asset('img/prolibro/mobile-banner-medio-prolibro-2.jpg') }}" alt="Prolibro Banner" class="img-fluid"> --}}
-                    <a href="https://www.tiendacopec.cl/collections/libros-viva-leer?utm_source=pro_libro&utm_medium=display&utm_campaign=programa_viva_leer&utm_id=programa_viva_leer&utm_term=programa_viva_leer_pro_libro_banner&utm_content=programa_viva_leer_pro_libro_banner">
+                    <img src="{{ asset('img/prolibro/mobile-banner-medio-prolibro.jpg') }}" alt="Prolibro Banner" class="img-fluid">
+                    <img src="{{ asset('img/prolibro/mobile-banner-medio-prolibro-2.jpg') }}" alt="Prolibro Banner" class="img-fluid">
+                    {{-- <a href="https://www.tiendacopec.cl/collections/libros-viva-leer?utm_source=pro_libro&utm_medium=display&utm_campaign=programa_viva_leer&utm_id=programa_viva_leer&utm_term=programa_viva_leer_pro_libro_banner&utm_content=programa_viva_leer_pro_libro_banner">
                         <img src="{{ asset('img/prolibro/copec-movil.png') }}" alt="Banner Prolibro" class="img-fluid w-100">
                     </a>
                     <a href="https://www.prolibro.cl/seller-shop/26">
@@ -168,7 +168,7 @@
     
                     <a href="https://www.prolibro.cl/seller-shop/22">
                         <img src="{{ asset('img/prolibro/megalibros-movil.jpg') }}" alt="Banner Prolibro" class="img-fluid w-100">
-                    </a>
+                    </a> --}}
 
                 </div>
             </div>
@@ -206,12 +206,12 @@
             <a href="http://www.radiovalparaiso.cl/" target="_blank" class="border border-white">
                 <img src="{{ asset('img/prolibro/banner-radio-valparaiso.jpg') }}" alt="" class="img-fluid w-100">
             </a>
-            <a href="https://www.tiendaclubdelectores.cl/tienda/club_de_lectores/busqueda/?query=&categoria=clasificados&offset=0&orden=fecha&dir_orden=descending&user_id=&contacto=club_de_lectores&cat=/Libros/" target="_blank" class="border border-white">
+            {{-- <a href="https://www.tiendaclubdelectores.cl/tienda/club_de_lectores/busqueda/?query=&categoria=clasificados&offset=0&orden=fecha&dir_orden=descending&user_id=&contacto=club_de_lectores&cat=/Libros/" target="_blank" class="border border-white">
                 <img src="{{ asset('img/prolibro/banner-mercurio-pc.jpg') }}" alt="" class="img-fluid w-100">
             </a>
             <a href="https://www.cooperativa.cl/" target="_blank" class="border border-white">
                 <img src="{{ asset('img/prolibro/cooperativa-pc.gif') }}" alt="" class="img-fluid w-100">
-            </a>
+            </a> --}}
             {{-- <img src="{{ asset('img/prolibro/banner-medio-prolibro.jpg') }}" alt="Prolibro Banner" class="img-fluid"> --}}
         </div>
     </div>
@@ -223,28 +223,28 @@
                     <a href="http://www.radiovalparaiso.cl/" target="_blank" class="border border-white">
                         <img src="{{ asset('img/prolibro/banner-radio-valparaiso.jpg') }}" alt="" class="img-fluid w-100">
                     </a>
-                    <a href="https://www.tiendaclubdelectores.cl/tienda/club_de_lectores/busqueda/?query=&categoria=clasificados&offset=0&orden=fecha&dir_orden=descending&user_id=&contacto=club_de_lectores&cat=/Libros/" target="_blank" class="border border-white">
+                    {{-- <a href="https://www.tiendaclubdelectores.cl/tienda/club_de_lectores/busqueda/?query=&categoria=clasificados&offset=0&orden=fecha&dir_orden=descending&user_id=&contacto=club_de_lectores&cat=/Libros/" target="_blank" class="border border-white">
                         <img src="{{ asset('img/prolibro/banner-mercurio-movil.jpg') }}" alt="" class="img-fluid w-100">
                     </a>
 
                     <a href="https://www.cooperativa.cl/" target="_blank" class="border border-white">
                         <img src="{{ asset('img/prolibro/cooperativa-movil.gif') }}" alt="" class="img-fluid w-100">
-                    </a>
+                    </a> --}}
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<section class="container mt-5 mb-grid-gutter">
+{{-- <section class="container mt-5 mb-grid-gutter">
     <div class="rounded-lg py-4">
         <div class="row align-items-center d-none d-md-flex">
-            {{--<div class="col-md-4 text-center">
+            <div class="col-md-4 text-center">
                 <img src="{{ asset('img/prolibro/logo_cooperativa.png') }}" alt="Banner Cooperativa" class="img-fluid w-50">
             </div>
             <div class="col-md-4 text-center">
                 <img src="{{ asset('img/filsa/tvn.jpg') }}" alt="Banner TVN" class="img-fluid w-50">
-            </div>--}}
+            </div>
             <div class="col-md-3 offset-3 text-center mx-auto">
                 <img src="{{ asset('img/prolibro/TVN.jpg') }}"  class="img-fluid w-50">
             </div>
@@ -275,19 +275,19 @@
             <div class="col-6 text-center">
                 <img src="{{ asset('img/prolibro/logo-cooperativa.jpg') }}"  class="img-fluid w-70">
             </div>
-            {{--<div class="col-md-4 text-center">
+            <div class="col-md-4 text-center">
                 <img src="{{ asset('img/prolibro/logo_cooperativa.png') }}" alt="Banner Cooperativa" class="img-fluid w-25">
             </div>
             <div class="col-md-4 text-center">
                 <img src="{{ asset('img/filsa/tvn.jpg') }}" alt="Banner TVN" class="img-fluid w-25">
-            </div>--}}
-            {{-- <div class="col-md-12 col-lg-4 text-center mx-auto">
+            </div>
+            <div class="col-md-12 col-lg-4 text-center mx-auto">
                 <a href="https://www.radiovalparaiso.cl/" target="_blank">
                     <img src="{{ asset('img/prolibro/partner-valparaiso.jpg') }}" alt="Banner Radio Valparaiso" class="img-fluid w-50">
                 </a>
-            </div> --}}
+            </div>
         </div>
     </div>
-</section>
+</section> --}}
 <!-- Toast: Added to Cart-->
 @endsection

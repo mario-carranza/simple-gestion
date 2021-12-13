@@ -82,10 +82,11 @@
                     </div>
                     <div class="col-md-6 border-right">
                         <div class="widget pb-2 mb-2">
-                            <h3 class="widget-title text-dark pb-1">Auspicia</h3>
+                            <h3 class="widget-title text-dark pb-1">Patrocinan</h3>
                             <div class="d-flex flex-wrap">
-                                <div class="col-md-6 mx-auto mb-2 text-center mt-3">
-                                    <img class="img-fluid w-50" src="{{ asset('img/prolibro/logo-copec.png') }}" alt="Copec" />
+                                
+                                <div class="col-md-6 mx-auto mb-2 text-center">
+                                    <img class="img-fluid" style="width:60%" src="{{ asset('img/prolibro/logo-municipalidad.jpg') }}" />
                                 </div>
                                 {{--<div class="col-6 mb-2 text-center mt-3">
                                     <img class="img-fluid w-50" src="{{ asset('img/prolibro/logo_ministerio_artes.jpg') }}" alt="Logo ministerio artes" />
@@ -121,7 +122,7 @@
                     </div>
                 </div> --}}
             </div>
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col">
                     <div class="row">
                         <div class="col">
@@ -143,7 +144,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
     @endif
