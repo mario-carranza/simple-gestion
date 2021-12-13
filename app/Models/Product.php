@@ -33,11 +33,13 @@ class Product extends Model
     // protected $dates = [];
 
     protected $fakeColumns = ['inventories_json'];
+    
     protected $casts = [
         'images_json' => 'array',
         'variations_json' => 'array',
         'attributes_json' => 'array',
         'inventories_json' => 'array',
+        'housing_pricing' => 'array',
     ];
 
     const PRODUCT_TYPE_SIMPLE = 1;
