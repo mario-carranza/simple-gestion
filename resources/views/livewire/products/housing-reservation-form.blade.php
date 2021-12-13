@@ -1,0 +1,62 @@
+<div>
+    <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#reservation-modal">Solicitar reserva</button>
+
+    <div wire:ignore.self class="modal fade" id="reservation-modal" data-backdrop="false">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Reservar</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body pb-2">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="">Fecha de Check In</label>
+                            <input type="date" class="form-control @error('checkInDate') is-invalid @enderror" wire:model="checkInDate" name="checkInDate">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Fecha de Check Out</label>
+                            <input type="date" class="form-control @error('checkOutDate') is-invalid @enderror" wire:model="checkOutDate" name="checkOutDate">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="">Nombre completo</label>
+                            <input wire:model="name" name="name" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Ingresa tu nombre">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="">Email</label>
+                            <input wire:model="email" name="email" type="email" class="form-control @error('email') is-invalid @enderror" placeholder="Ingresa tu correo">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="">Número celular</label>
+                            <input wire:model="cellphone" name="cellphone" type="text" class="form-control @error('cellphone') is-invalid @enderror" placeholder="Ingresa tu número">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="">Numero de adultos</label>
+                            <input wire:model="adultsNumber" name="adultsNumber" type="number" class="form-control @error('adultsNumber') is-invalid @enderror" placeholder="Numero de adultos">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="">Numero de niños</label>
+                            <input wire:model="childrensNumber" name="childrensNumber" type="number" class="form-control @error('childrensNumber') is-invalid @enderror" placeholder="Numero de niños">
+                        </div>
+                        <div class="col-md-4">
+                            <button wire:click="calculatePrice" class="btn btn-info btn-block" style="margin-top: 29px">{{ $priceLabel }}</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button {{ $canMakeReservation ? '' : 'disabled' }} class="btn btn-primary btn-block">Solicitar Reserva</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Footer-->
+                <div class="modal-footer flex-wrap justify-content-between bg-secondary font-size-md">
+                    <div class="px-2 py-1"><span class="text-muted"></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
