@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 
 class ProductReservation extends Model
 {
@@ -21,10 +22,25 @@ class ProductReservation extends Model
     protected $guarded = ['id'];
     // protected $fillable = [];
     // protected $hidden = [];
-    // protected $dates = [];
+    protected $dates = [
+        'check_in_date',
+        'check_out_date',
+        'created_at',
+    ];
 
     const PENDING_STATUS = 'pending';
+    const REJECTED_STATUS = 'rejected';
+    const ACCEPTED_STATUS = 'accepted';
+    const PAYED_STATUS = 'payed';
+    const CANCELED_STATUS = 'canceled';
 
+    const STATUS_DICTIRONARY = [
+        self::PENDING_STATUS => 'Pendiente',
+        self::REJECTED_STATUS => 'Rechazada',
+        self::ACCEPTED_STATUS => 'Aceptada',
+        self::PAYED_STATUS => 'Pagada',
+        self::CANCELED_STATUS => 'Cancelada',
+    ];
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS
@@ -36,6 +52,10 @@ class ProductReservation extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -48,6 +68,20 @@ class ProductReservation extends Model
     | ACCESSORS
     |--------------------------------------------------------------------------
     */
+    public function getReservationStatusTextAttribute()
+    {
+        return self::STATUS_DICTIRONARY[$this->reservation_status] ?? 'Desconocido';
+    }
+
+    public function getCheckInDateOnlyDateAttribute()
+    {
+        return Carbon::parse($this->check_in_date)->format('Y-m-d');
+    }
+
+    public function getCheckOutDateOnlyDateAttribute()
+    {
+        return Carbon::parse($this->check_out_date)->format('Y-m-d');
+    }
 
     /*
     |--------------------------------------------------------------------------

@@ -99,6 +99,8 @@ Route::group([
 
     Route::crud('slider', 'SliderCrudController');
     Route::crud('productreservation', 'ProductReservationCrudController');
+    Route::get('productreservation/change_status/{id}', 'ProductReservationCrudController@changeStatusView');
+    Route::post('productreservation/change_status/{id}', 'ProductReservationCrudController@changeStatus');
 }); // this should be the absolute last line of this file
 
 //Route::get('admin/payment/subscription/test/{id}', 'App\Http\Controllers\Admin\Payments\WebPayPlusController@subscriptionTestPayment')->name('payment.test.detail');
