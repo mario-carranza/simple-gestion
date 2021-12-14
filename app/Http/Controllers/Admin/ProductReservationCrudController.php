@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Cart;
+use App\Models\Seller;
+use App\Models\CartItem;
 use Illuminate\Http\Request;
 use App\Models\ProductReservation;
 use App\Http\Livewire\Products\Product;
@@ -22,6 +25,9 @@ class ProductReservationCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 
+    private $admin;
+    private $userSeller;
+
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
      * 
@@ -34,6 +40,16 @@ class ProductReservationCrudController extends CrudController
         CRUD::setEntityNameStrings('solicitud de reserva', 'solicitudes de reserva');
 
         $this->crud->denyAccess(['show', 'create']);
+
+        $this->admin = false;
+        $this->userSeller = null;
+
+        if (backpack_user()->can('product_reservation.admin')) {
+            $this->admin = true;
+
+        } else {
+            $this->userSeller = Seller::where('user_id', backpack_user()->id)->firstOrFail();
+        }
     }
 
     /**
@@ -49,6 +65,12 @@ class ProductReservationCrudController extends CrudController
         $this->crud->addButtonFromView('bottom', 'modal_status', 'product_reservation.modal_status', 'begining');
        
         $this->crud->setActionsColumnPriority(0);
+
+        if (!$this->admin) {
+            $this->crud->addClause('whereHas', 'product', function ($q) {
+                return $q->where('seller_id', $this->userSeller->id);
+            });
+        } 
 
         CRUD::addColumn([
             'name' => 'created_at',
@@ -287,6 +309,73 @@ class ProductReservationCrudController extends CrudController
 
         $reservation->update();
 
+        switch ($request->reservation_status) {
+            case ProductReservation::ACCEPTED_STATUS:
+                # Mandar correo
+                break;
+
+            case ProductReservation::REJECTED_STATUS:
+                # Mandar correo 
+                break;
+            
+            default:
+                # Mandar correo
+                break;
+        }
+
         return true;
+    }
+
+    public function addReservationToCart($hash)
+    {
+        $productReservation = ProductReservation::where('hash', $hash)->firstOrFail();
+
+        $product = $productReservation->product;
+
+        if ($productReservation->reservation_status !== ProductReservation::ACCEPTED_STATUS) {
+            abort(404);
+        }
+
+        // Get cart
+        $session = session()->getId();
+        $user = auth()->check() ? auth()->user() : null;
+        $cart = Cart::getInstance($user, $session); 
+
+        // Add product to Cart
+        $cart->cart_items()->where('product_id', $product->id)->delete();
+
+        $data = [
+            'cart_id' => $cart->id,
+            'product_id' => $product->id,
+            'sku' => $product->sku,
+            'name' => $product->name,
+            'price' => $productReservation->price,
+            'qty' => 1,
+            'sub_total' => $productReservation->price,
+            'total' => $productReservation->price,
+            'currency_id' => $product->currency_id,
+        ];
+
+        if ($product->parent_id) {
+            $attributes = [];
+            foreach ($product->getAttributesWithNames() as $key) {
+                $attributes[] = [
+                    $key['name'] => $key['value']
+                ];
+            }
+            $data = array_merge($data, ['product_attributes' => json_encode($attributes)]);
+        }
+
+        $item = CartItem::create($data);
+
+        $cart->items_count++;
+
+        $cart->recalculateSubtotal();
+
+        $cart->recalculateQtys();
+
+        $cart->update();
+
+        // redirigir al checkout
     }
 }

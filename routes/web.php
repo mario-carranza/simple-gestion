@@ -85,6 +85,8 @@ Route::get('/shopping-cart', 'Frontend\CartController@shoppingCart')->name('shop
 Route::get('/checkout', 'Frontend\CheckoutController@index')->name('checkout');
 Route::get('/filter-products', 'Frontend\HomeController@filterProducts');
 
+Route::get('product-reservation/add-to-cart/{hash}', 'Admin\ProductReservationCrudController@addReservationToCart')->name('product-reservation.add-to-cart');
+
 Route::group([
     'prefix' => '/transbank'
 ], function () {
