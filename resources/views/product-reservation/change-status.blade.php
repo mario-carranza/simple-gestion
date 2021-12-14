@@ -75,12 +75,15 @@
             $('#sellerComment').hide()
         }
     }
+    
     async function changeStatus() {
+        const status = $('select[name=reservation_status').val()
+        const seller_comment = $('textarea[name=seller_comment').val()
         const config = {
             url: "{{ url('admin/productreservation/change_status') }}/{{ $productReservation->id }}",
             data: {
-                'reservation_status': $('select[name=reservation_status').val(),
-                'seller_comment': $('textarea[name=seller_comment').val(),
+                'reservation_status': status,
+                'seller_comment': seller_comment,
             },
             type: 'POST',
             headers: {
@@ -89,12 +92,23 @@
         }
 
         try {
-            const result = $.ajax(config)
+            const result = await $.ajax(config)
+
+            if (status === '{{ App\Models\ProductReservation::ACCEPTED_STATUS }}') {
+                await swal({
+                    text: 'La reserva ha sido aceptada. Un correo sera enviado al cliente con instrucciones para proceder el pago de la reserva. Una vez que la reserva sea pagada, cambiara su estado a "Pagada"',
+                    icon: 'success'
+                });
+            }
+            
             $('#statusModal').modal('hide')
+
             new Noty({type: 'success',text: 'Estado guardado con éxito',}).show();
+
             crud.table.ajax.reload();
         } catch (error) {
             console.log(error)
+            new Noty({type: 'danger',text: 'Ah ocurrido un error',}).show();
         }
     }
 </script>

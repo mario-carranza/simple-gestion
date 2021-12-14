@@ -2,11 +2,12 @@
 
 namespace App\Http\Livewire\Products;
 
-use App\Models\ProductReservation;
-use App\Models\ProductReservations;
 use Carbon\Carbon;
 use Livewire\Component;
 use Carbon\CarbonPeriod;
+use Illuminate\Support\Str;
+use App\Models\ProductReservation;
+use App\Models\ProductReservations;
 
 class HousingReservationForm extends Component
 {
@@ -113,6 +114,7 @@ class HousingReservationForm extends Component
         $this->validate();
 
         ProductReservation::create([
+            'hash' => (string) Str::uuid(),
             'product_id' => $this->product->id,
             'adults_number' => $this->adultsNumber,
             'childrens_number' => $this->childrensNumber,

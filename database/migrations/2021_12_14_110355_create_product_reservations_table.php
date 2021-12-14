@@ -15,6 +15,7 @@ class CreateProductReservationsTable extends Migration
     {
         Schema::create('product_reservations', function (Blueprint $table) {
             $table->id();
+            $table->string('hash');
             $table->foreignId('product_id')->constrained('products');
             $table->string('name');
             $table->string('email');
