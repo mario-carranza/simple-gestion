@@ -39,7 +39,7 @@
             {{-- <li class="nav-item"><a class="nav-link p-4" href="#reviews" data-toggle="tab" role="tab">Reviews <span class="font-size-sm opacity-60">(74)</span></a></li> --}}
         </ul>
         @if ($product->is_housing)
-            @livewire('products.housing-detail', ['product' => $product])
+            @include('housing-product', ['product' => $product])
         @elseif ($product->product_type->id == 2)
             @livewire('products.configurable-detail', ['product' => $product])
         @elseif ($product->product_type->id == 1)

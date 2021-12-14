@@ -315,6 +315,13 @@ class ProductCrudController extends CrudController
         ]);
 
         CRUD::addField([
+            'name' => 'is_housing',
+            'type' => 'hidden',
+            'value' => null,
+            'default' => null,
+        ]);
+
+        CRUD::addField([
             'name' => 'customShowHideSuperAttributes',
             'type' => 'product.show_hide_variants',
         ]);
@@ -342,27 +349,7 @@ class ProductCrudController extends CrudController
         CRUD::addField([
             'name' => 'product_type_id',
             'type' => 'hidden',
-            'default' => 2,
-        ]);
-
-        CRUD::addField([
-            'label'       => "Atributos para variaciones",
-            'type'        => "select2_from_ajax_multiple",
-            'name'        => 'super_attributes',
-            'placeholder' => 'Selecciona los atributos que usaras en tus variaciones',
-            'entity'      => 'super_attributes',
-            'attribute'   => "descripcion_name",
-            'data_source' => url("admin/api/productclassattributes/get"),
-            'pivot'       => true,
-            'minimum_input_length' => 0,
-            'include_all_form_fields'  => true,
-            'dependencies'  => ['product_class_id'],
-            'attributes' => [
-                'id' => 'super_attributes',
-            ],
-            'wrapper' => [
-               'id' => 'super_attributes_wrapper',
-            ]
+            'default' => 1,
         ]);
 
         CRUD::addField([
@@ -393,18 +380,21 @@ class ProductCrudController extends CrudController
             'name' => 'is_service',
             'type' => 'hidden',
             'value' => 1,
+            'default' => 1,
         ]);
 
         CRUD::addField([
             'name' => 'use_inventory_control',
             'type' => 'hidden',
             'value' => 0,
+            'default' => 0,
         ]);
 
         CRUD::addField([
             'name' => 'is_housing',
             'type' => 'hidden',
             'value' => 1,
+            'default' => 1,
         ]);
 
         CRUD::addField([
@@ -446,7 +436,10 @@ class ProductCrudController extends CrudController
             $this->setVariationsField($product);
         }
 
-        if ($product->product_type->id == Product::PRODUCT_TYPE_SIMPLE) {
+        if (
+            $product->product_type->id == Product::PRODUCT_TYPE_SIMPLE
+            && !$product->is_housing
+        ) {
             $this->setPriceDimensionsFields($product);
         }
 
