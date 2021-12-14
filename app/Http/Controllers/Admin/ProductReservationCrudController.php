@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\ProductReservationsRequest;
+use App\Http\Requests\ProductReservationRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class ProductReservationsCrudController
+ * Class ProductReservationCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class ProductReservationsCrudController extends CrudController
+class ProductReservationCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -26,9 +26,9 @@ class ProductReservationsCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\ProductReservations::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/productreservations');
-        CRUD::setEntityNameStrings('productreservations', 'product_reservations');
+        CRUD::setModel(\App\Models\ProductReservation::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/productreservation');
+        CRUD::setEntityNameStrings('productreservation', 'product_reservations');
     }
 
     /**
@@ -56,7 +56,7 @@ class ProductReservationsCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(ProductReservationsRequest::class);
+        CRUD::setValidation(ProductReservationRequest::class);
 
         CRUD::setFromDb(); // fields
 

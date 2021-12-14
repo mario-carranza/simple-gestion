@@ -5,7 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductReservations extends Model
+class ProductReservation extends Model
 {
     use CrudTrait;
 
@@ -22,6 +22,8 @@ class ProductReservations extends Model
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
+
+    const PENDING_STATUS = 'pending';
 
     /*
     |--------------------------------------------------------------------------
