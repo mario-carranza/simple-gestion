@@ -19,7 +19,7 @@ $product = $item->product;
                         @endif
                     @endforeach
                 @endif
-                @if ($item->product->is_housing && filled(json_decode($item->product_attributes)))
+                @if (($item->product->is_housing || $item->product->is_tour) && filled(json_decode($item->product_attributes)))
                     @foreach (json_decode($item->product_attributes) as $attribute)
                         @foreach ($attribute as $name => $value)
                             <div class="font-size-sm"><span

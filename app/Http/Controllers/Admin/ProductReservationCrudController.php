@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use App\Models\Cart;
 use App\Models\Seller;
 use App\Models\Product;
@@ -404,12 +405,20 @@ class ProductReservationCrudController extends CrudController
             $data = array_merge($data, ['product_attributes' => json_encode($attributes)]);
         }
 
-        $data['product_attributes'] = json_encode([
-            ['Fecha de Check In' => $productReservation->check_in_date->format('d/m/Y')],
-            ['Fecha de Check Out' => $productReservation->check_out_date->format('d/m/Y')],
-            ['Numero de adultos' => $productReservation->adults_number],
-            ['Numero de niños' => $productReservation->childrens_number],
-        ]);
+        if ($product->is_housing) {
+            $data['product_attributes'] = json_encode([
+                ['Fecha de Check In' => $productReservation->check_in_date->format('d/m/Y')],
+                ['Fecha de Check Out' => $productReservation->check_out_date->format('d/m/Y')],
+                ['Numero de adultos' => $productReservation->adults_number],
+                ['Numero de niños' => $productReservation->childrens_number],
+            ]);
+        } else if ($product->is_tour) {
+            $data['product_attributes'] = json_encode([
+                ['Fecha y hora' => Carbon::parse($product->tour_information['tour_date'])->format('d/m/Y h:i a ')],
+                ['Numero de adultos' => $productReservation->adults_number],
+                ['Numero de niños' => $productReservation->childrens_number],
+            ]);
+        }
 
         $item = CartItem::create($data);
 

@@ -518,6 +518,19 @@ class Product extends Model
         }
     }
 
+    public function getHousingPriceRange() : array
+    {
+        $minAdults = collect($this->housing_pricing)->pluck('adults_price')->min();
+        $maxAdults = collect($this->housing_pricing)->pluck('adults_price')->max();
+        $minChildrens = collect($this->housing_pricing)->pluck('childrens_price')->min();
+        $maxChildrens = collect($this->housing_pricing)->pluck('childrens_price')->max();
+
+        return [
+            min($minAdults, $minChildrens),
+            max($maxChildrens, $maxAdults),
+        ];
+    }
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

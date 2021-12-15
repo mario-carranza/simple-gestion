@@ -30,14 +30,16 @@
                 <!-- Product details-->
                 <div class="col-lg-5 pt-4 pt-lg-0">
                     <div class="product-details ml-auto">
-                        <span class="d-inline-block font-size-sm align-middle mt-1">Vendido por: </span><a href="{{ url('seller-shop/'.$product->seller->id) }}" class="d-inline-block font-size-sm align-middle mt-1 ml-1">{{ $product->seller->visible_name }}</a>
+                        <span class="d-inline-block font-size-sm align-middle mt-1">Lo ofrece: </span><a href="{{ url('seller-shop/'.$product->seller->id) }}" class="d-inline-block font-size-sm align-middle mt-1 ml-1">{{ $product->seller->visible_name }}</a>
                     </div>
                     <div class="product-details ml-auto pb-3">
                         @if ($product->is_tour)
                             <div class="h4 font-weight-normal text-accent mb-1 mr-1">Adultos: {{ currencyFormat($product->tour_information['adults_price'], 'CLP', true) }}</div>
                             <div class="h4 font-weight-normal text-accent mb-3 mr-1">Niños: {{ currencyFormat($product->tour_information['childrens_price'], 'CLP', true) }}</div> 
                         @elseif($product->is_housing)
-                            <div class="h4 font-weight-normal text-accent mb-3 mr-1">Precios</div> 
+                            <div class="h4 font-weight-normal text-accent mb-3 mr-1">
+                                {{ currencyFormat($product->getHousingPriceRange()[0], 'CLP', true) }} - {{ currencyFormat($product->getHousingPriceRange()[1], 'CLP', true) }}
+                            </div>
                         @endif
                         <!--
                             <div class="font-size-sm mb-4"><span class="text-heading font-weight-medium mr-1">Color:</span><span class="text-muted" id="colorOption">Dark blue/Orange</span></div>
@@ -61,11 +63,11 @@
                                     <label class="custom-option-label rounded-circle" for="color4"><span class="custom-option-color rounded-circle" style="background-color: #333;"></span></label>
                                 </div>
                             -->
-                            @if ($product->haveSufficientQuantity(1))
+                            {{-- @if ($product->haveSufficientQuantity(1))
                                 <div class="product-badge product-available mt-n5"><i class="czi-security-check"></i>Producto disponible</div>
                             @else
                                 <div class="product-badge product-not-available mt-n5"><i class="czi-security-close"></i>Producto no disponible</div>
-                            @endif
+                            @endif --}}
                         </div>
                         <!--
                             <div class="form-group">
@@ -208,30 +210,10 @@
                 <div class="media align-items-center mr-md-3"><img src="{{ url($product->getFirstImagePath()) }}" width="90" alt="Product thumb">
                     <div class="mdeia-body pl-3">
                         <h6 class="font-size-base mb-2">{{$product->name}}</h6>
-                        @if ($product->product_type->id == 1)
-                            @if ($product->has_special_price)
-                                <div class="mb-3">
-                                    <span class="h4 font-weight-normal text-accent mr-1">{{ currencyFormat($product->special_price, defaultCurrency(), true) }}</span>
-                                    <del class="text-muted font-size-lg mr-3">{{ currencyFormat($product->price, defaultCurrency(), true) }}</del><span class="badge badge-warning badge-shadow align-middle mt-n2">Descuento</span>
-                                </div>
-                            @else
-                                <div class="h4 font-weight-normal text-accent">{{ currencyFormat($product->price, 'CLP', true) }}</div>
-                            @endif
-
-                        @endif
                     </div>
                 </div>
                 @if ($product->haveSufficientQuantity(1))
                 <div class="d-flex align-items-center pt-3">
-                    @livewire('qty-item', [
-                        'qty' => 1,
-                        'emitTo' => [
-                            'addtocart.cant',
-                        ]
-                    ])
-                    <div style="margin-left: 8px; margin-top: 14px">
-                        @livewire('products.add-to-cart',['product' => $product, 'view' => 'single'])
-                    </div>
                     {{-- <div class="mr-2">
                         <button class="btn btn-secondary btn-icon" type="button" data-toggle="tooltip" title="Add to Wishlist"><i class="czi-heart font-size-lg"></i></button>
                     </div>
