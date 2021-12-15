@@ -33,7 +33,12 @@
                         <span class="d-inline-block font-size-sm align-middle mt-1">Vendido por: </span><a href="{{ url('seller-shop/'.$product->seller->id) }}" class="d-inline-block font-size-sm align-middle mt-1 ml-1">{{ $product->seller->visible_name }}</a>
                     </div>
                     <div class="product-details ml-auto pb-3">
-                        <div class="h3 font-weight-normal text-accent mb-3 mr-1">precio...</div>
+                        @if ($product->is_tour)
+                            <div class="h4 font-weight-normal text-accent mb-1 mr-1">Adultos: {{ currencyFormat($product->tour_information['adults_price'], 'CLP', true) }}</div>
+                            <div class="h4 font-weight-normal text-accent mb-3 mr-1">Niños: {{ currencyFormat($product->tour_information['childrens_price'], 'CLP', true) }}</div> 
+                        @elseif($product->is_housing)
+                            <div class="h4 font-weight-normal text-accent mb-3 mr-1">Precios</div> 
+                        @endif
                         <!--
                             <div class="font-size-sm mb-4"><span class="text-heading font-weight-medium mr-1">Color:</span><span class="text-muted" id="colorOption">Dark blue/Orange</span></div>
                         -->
@@ -78,9 +83,15 @@
                             </div>
                         -->
                         @if ($product->haveSufficientQuantity(1))
-                        <div class="mb-3">
-                            @livewire('products.housing-reservation-form', ['product' => $product], key($product->id))
-                        </div>
+                            <div class="mb-3">
+                                @livewire('products.housing-reservation-form', ['product' => $product], key($product->id))
+                            </div>
+                        @endif
+
+                        @if ($product->is_tour)
+                            <div class="mb-4">
+                                <p>Fecha y hora de salida: {{ Carbon\Carbon::parse($product->tour_information['tour_date'])->format('d/m/Y h:i a ') }}</p>
+                            </div>
                         @endif
                         <p> Información sobre el vendedor </p>
                         @if($product->seller->addresses)

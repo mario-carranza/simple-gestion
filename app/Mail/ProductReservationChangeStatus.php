@@ -3,9 +3,10 @@
 namespace App\Mail;
 
 use App\Models\Product;
-use App\Models\ProductReservation;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Support\Carbon;
+use App\Models\ProductReservation;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -49,8 +50,16 @@ class ProductReservationChangeStatus extends Mailable
                     $this->text .= '<b>Nombre:</b> ' . $productReservation->name . '<br>';
                     $this->text .= '<b>Correo:</b> ' . $productReservation->email . '<br>';
                     $this->text .= '<b>Teléfono:</b> ' . $productReservation->cellphone . '<br>';
-                    $this->text .= '<b>Fecha de Check In:</b> ' . $productReservation->check_in_date->format('d/m/Y') . '<br>';
-                    $this->text .= '<b>Fecha de Check Out:</b> ' . $productReservation->check_out_date->format('d/m/Y') . '<br>';
+
+                    if ($productReservation->product->is_tour) {
+                        $this->text .= '<b>Fecha del tour:</b> ' . Carbon::parse($productReservation->product->tour_information['tour_date'])->format('d/m/Y h:i a ') . '<br>';
+                    }
+
+                    if ($productReservation->product->is_housing) {
+                        $this->text .= '<b>Fecha de Check In:</b> ' . $productReservation->check_in_date->format('d/m/Y') . '<br>';
+                        $this->text .= '<b>Fecha de Check Out:</b> ' . $productReservation->check_out_date->format('d/m/Y') . '<br>';
+                    }
+
                     $this->text .= '<b>Cantidad de adultos:</b> ' . $productReservation->adults_number . '<br>';
                     $this->text .= '<b>Cantidad de niños:</b> ' . $productReservation->childrens_number . '<br>';
                     
