@@ -8,6 +8,9 @@ use Carbon\CarbonPeriod;
 use Illuminate\Support\Str;
 use App\Models\ProductReservation;
 use App\Models\ProductReservations;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ProductReservationCreated;
 
 class HousingReservationForm extends Component
 {
@@ -111,9 +114,11 @@ class HousingReservationForm extends Component
 
     public function makeReservation()
     {
+        $this->canMakeReservation = false;
+        
         $this->validate();
 
-        ProductReservation::create([
+        $productReservation = ProductReservation::create([
             'hash' => (string) Str::uuid(),
             'product_id' => $this->product->id,
             'adults_number' => $this->adultsNumber,
@@ -129,6 +134,16 @@ class HousingReservationForm extends Component
             'customer_comment' => $this->comments,
             'customer_id' => auth()->user()->customer->id ?? null,
         ]);
+
+        try {
+            Mail::to($this->product->seller->email)->send(new ProductReservationCreated($productReservation, 'seller'));
+            Mail::to($this->email)->send(new ProductReservationCreated($productReservation, 'customer'));
+        } catch (\Throwable $th) {
+            Log::error('No se puedo enviar el correo', [
+                'error' => $th->getMessage(),
+                'stacktrace' => $th->getTraceAsString(),
+            ]);
+        }
 
         $this->step = 2;
     }

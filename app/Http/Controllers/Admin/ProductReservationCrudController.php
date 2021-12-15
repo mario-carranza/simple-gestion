@@ -8,6 +8,10 @@ use App\Models\Product;
 use App\Models\CartItem;
 use Illuminate\Http\Request;
 use App\Models\ProductReservation;
+use Prologue\Alerts\Facades\Alert;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ProductReservationChangeStatus;
 use App\Http\Requests\ProductReservationRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -61,6 +65,8 @@ class ProductReservationCrudController extends CrudController
     protected function setupListOperation()
     {
         $this->crud->addButtonFromView('line', 'change_status', 'product_reservation.change_status', 'beginning');
+        
+        $this->crud->addButtonFromView('line', 'view_order', 'product_reservation.view_order', 'beginning');
         
         $this->crud->addButtonFromView('bottom', 'modal_status', 'product_reservation.modal_status', 'begining');
        
@@ -307,6 +313,16 @@ class ProductReservationCrudController extends CrudController
         }, function($value) {
             $this->crud->addClause('where', 'product_id', $value);
         });
+
+        CRUD::addFilter([
+            'name'  => 'status',
+            'type'  => 'dropdown',
+            'label' => 'Estado'
+        ], function() {
+            return ProductReservation::STATUS_DICTIRONARY;
+        }, function($value) {
+            $this->crud->addClause('where', 'reservation_status', $value);
+        });
     }
 
     public function changeStatusView($id)
@@ -326,18 +342,21 @@ class ProductReservationCrudController extends CrudController
 
         $reservation->update();
 
-        switch ($request->reservation_status) {
-            case ProductReservation::ACCEPTED_STATUS:
-                # Mandar correo
-                break;
+        if (
+            $reservation->reservation_status === ProductReservation::ACCEPTED_STATUS
+            || $reservation->reservation_status === ProductReservation::REJECTED_STATUS
+        ) {
+            try {
+                Mail::to($reservation->email)
+                    ->send(new ProductReservationChangeStatus($reservation, 'customer', $reservation->reservation_status));
+            } catch (\Throwable $th) {
+                Log::error('No se puedo enviar el correo', [
+                    'error' => $th->getMessage(),
+                    'stacktrace' => $th->getTraceAsString(),
+                ]);
 
-            case ProductReservation::REJECTED_STATUS:
-                # Mandar correo 
-                break;
-            
-            default:
-                # Mandar correo
-                break;
+                Alert::add('warning', 'Ocurrio un problema enviando el correo de confirmación al cliente')->flash();
+            }
         }
 
         return true;
@@ -402,6 +421,6 @@ class ProductReservationCrudController extends CrudController
 
         $cart->update();
 
-        return redirect()->route('checkout');
+        return redirect()->route('shopping-cart');
     }
 }
