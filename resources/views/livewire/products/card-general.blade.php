@@ -81,6 +81,9 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4">
+                                            @if($product->is_travel)
+                                                <span class="badge badge-info badge-shadow position-relative">Turismo</span>
+                                            @endif
                                             @if($product->has_special_price)
                                                 <span class="badge badge-warning badge-shadow position-relative">Descuento</span>
                                             @endif

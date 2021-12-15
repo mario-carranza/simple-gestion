@@ -7,6 +7,11 @@
         </button>
     </div> --}}
     <div class="row">
+        @if($product->is_travel)
+        <div class="col-lg-4 col-md-4 col-sm-4">
+            <span class="badge badge-success badge-shadow">Turismo</span>
+        </div>
+        @endif
         @if($product->has_special_price)
             <div class="col-lg-4 col-md-4 col-sm-4">
                 <span class="badge badge-warning badge-shadow">Dcto</span>

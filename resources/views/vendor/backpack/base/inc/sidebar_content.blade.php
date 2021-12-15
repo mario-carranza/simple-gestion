@@ -173,3 +173,7 @@
     </ul>
 </li>
 @endcanany
+
+@can('section.list')
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('section') }}'><i class='nav-icon la la-table'></i> Secciones</a></li>
+@endcan
