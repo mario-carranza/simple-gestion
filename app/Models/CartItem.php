@@ -55,6 +55,11 @@ class CartItem extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function product_reservation()
+    {
+        return $this->belongsTo(ProductReservation::class);
+    }
+
     /*
     public function payment()
     {
