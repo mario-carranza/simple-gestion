@@ -333,6 +333,11 @@ class ProductCrudController extends CrudController
         ]);
 
         CRUD::addField([
+            'name' => 'is_travel',
+            'type' => 'hidden',
+        ]);
+
+        CRUD::addField([
             'name' => 'customShowHideSuperAttributes',
             'type' => 'product.show_hide_variants',
         ]);
@@ -413,6 +418,13 @@ class ProductCrudController extends CrudController
             'type' => 'hidden',
             'value' => $type === 'tour',
             'default' => $type === 'tour',
+        ]);
+
+        CRUD::addField([
+            'name' => 'is_travel',
+            'type' => 'hidden',
+            'default' => 1,
+            'value' => 1,
         ]);
 
         CRUD::addField([
@@ -786,6 +798,7 @@ class ProductCrudController extends CrudController
     {
         CRUD::addField([
             'name' => 'housing_pricing',
+            'label' => 'Precios por dia',
             'type' => 'product.table_with_types',
             'columns' => [
                 'day' => 'Dia',
