@@ -28,15 +28,23 @@ class HousingReservationForm extends Component
     public $canMakeReservation;
     public $comments;
 
-    protected $rules = [
-        'name' => 'required',
-        'email' => 'required|email',
-        'adultsNumber' => 'required|numeric',
-        'childrensNumber' => 'required|numeric',
-        'cellphone' => 'required',
-        'checkOutDate' => 'required|date|after:checkInDate',
-        'checkInDate' => 'required|date',
-    ];
+    private function getRulesValidations() 
+    {
+        $rules = [
+            'name' => 'required',
+            'email' => 'required|email',
+            'adultsNumber' => 'required|numeric',
+            'childrensNumber' => 'required|numeric',
+            'cellphone' => 'required',
+        ];
+
+        if ($this->product->is_housing) {
+            $rules['checkOutDate'] = 'required|date|after:checkInDate';
+            $rules['checkInDate'] = 'required|date';
+        }
+
+        return $rules;
+    }
 
     public function render()
     {
@@ -47,7 +55,7 @@ class HousingReservationForm extends Component
     {
         $this->step = 1;
 
-        $this->product;
+        $this->product = $product;
 
         $this->priceLabel = 'Calcular precio';
 
@@ -79,8 +87,23 @@ class HousingReservationForm extends Component
 
         $this->canMakeReservation = false;
 
-        $this->validate();
+        $this->validate($this->getRulesValidations());
 
+        if ($this->product->is_housing) {
+            $estimatePrice = $this->calculateHousingPrice();
+        }  else if ($this->product->is_tour) {
+            $estimatePrice = $this->calculateTourPrice();
+        }
+
+        $this->priceLabel = "$ " . currencyFormat($estimatePrice, 'CLP') .  " (recalcular)";
+
+        $this->price = $estimatePrice;
+
+        if ($this->price !== 0) $this->canMakeReservation = true;
+    }
+
+    public function calculateHousingPrice() : float
+    {
         $checkInDate = Carbon::parse($this->checkInDate)->midDay();
 
         $checkOutDate = Carbon::parse($this->checkOutDate)->midDay();
@@ -105,31 +128,48 @@ class HousingReservationForm extends Component
             $estimatePrice += $adultsPrice + $childrensPrice;
         }
 
-        $this->priceLabel = "$ " . currencyFormat($estimatePrice, 'CLP') .  " (recalcular)";
+        return $estimatePrice;
+    }
 
-        $this->price = $estimatePrice;
+    public function calculateTourPrice() : float
+    {
+        $estimatePrice = 0;
 
-        if ($this->price !== 0) $this->canMakeReservation = true;
+        $estimatePrice += ($this->adultsNumber * $this->product->tour_information['adults_price']);
+
+        $estimatePrice += ($this->childrensNumber * $this->product->tour_information['childrens_price']);
+
+        return $estimatePrice;
     }
 
     public function makeReservation()
     {
         $this->canMakeReservation = false;
         
-        $this->validate();
+        $this->validate($this->getRulesValidations());
+
+        if ($this->product->is_housing) {
+            $checkInDate = $this->checkInDate;
+            $checkOutDate = $this->checkOutDate;
+            $type = 'housing';
+        } else if ($this->product->is_tour) {
+            $checkInDate = $this->product->tour_information['tour_date'];
+            $checkOutDate = $this->product->tour_information['tour_date'];
+            $type = 'tour';
+        }
 
         $productReservation = ProductReservation::create([
             'hash' => (string) Str::uuid(),
             'product_id' => $this->product->id,
             'adults_number' => $this->adultsNumber,
             'childrens_number' => $this->childrensNumber,
-            'check_in_date' => $this->checkInDate,
-            'check_out_date' => $this->checkOutDate,
+            'check_in_date' => $checkInDate,
+            'check_out_date' => $checkOutDate,
             'name' => $this->name,
             'email' => $this->email,
             'cellphone' => $this->cellphone,
             'price' => $this->price,
-            'type' => 'housing',
+            'type' => $type,
             'reservation_status' => ProductReservation::PENDING_STATUS,
             'customer_comment' => $this->comments,
             'customer_id' => auth()->user()->customer->id ?? null,

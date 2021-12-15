@@ -10,16 +10,18 @@
                 </div>
                 <div class="modal-body pb-2">
                     @if ($step === 1)
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="">Fecha de Check In</label>
-                                <input type="date" class="form-control @error('checkInDate') is-invalid @enderror" wire:model="checkInDate" name="checkInDate">
+                        @if ($product->is_housing)
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="">Fecha de Check In</label>
+                                    <input type="date" class="form-control @error('checkInDate') is-invalid @enderror" wire:model="checkInDate" name="checkInDate">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="">Fecha de Check Out</label>
+                                    <input type="date" class="form-control @error('checkOutDate') is-invalid @enderror" wire:model="checkOutDate" name="checkOutDate">
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label for="">Fecha de Check Out</label>
-                                <input type="date" class="form-control @error('checkOutDate') is-invalid @enderror" wire:model="checkOutDate" name="checkOutDate">
-                            </div>
-                        </div>
+                        @endif
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label for="">Nombre completo</label>

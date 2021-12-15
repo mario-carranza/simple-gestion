@@ -38,8 +38,8 @@
             <li class="nav-item"><a class="nav-link p-4" href="#specs" data-toggle="tab" role="tab">Detalles del Producto</a></li>
             {{-- <li class="nav-item"><a class="nav-link p-4" href="#reviews" data-toggle="tab" role="tab">Reviews <span class="font-size-sm opacity-60">(74)</span></a></li> --}}
         </ul>
-        @if ($product->is_housing)
-            @include('housing-product', ['product' => $product])
+        @if ($product->is_housing || $product->is_tour)
+            @include('travel-product', ['product' => $product])
         @elseif ($product->product_type->id == 2)
             @livewire('products.configurable-detail', ['product' => $product])
         @elseif ($product->product_type->id == 1)
