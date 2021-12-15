@@ -88,7 +88,7 @@ class ProductReservationCrudController extends CrudController
 
         CRUD::addColumn([
             'name' => 'name',
-            'label' => 'nombre',
+            'label' => 'Nombre',
             'priority' => 1,
         ]);
 

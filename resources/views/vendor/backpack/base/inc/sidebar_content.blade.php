@@ -129,7 +129,11 @@
         @can('productinventorysource.list')
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('productinventorysource') }}'><i class='nav-icon la la-warehouse'></i> Bodegas</a></li>
         @endcan
-	</ul>
+
+        @can('productreservation.list')
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('productreservation') }}'><i class='nav-icon la la-map-marked'></i> Reservaciones</a></li>
+        @endcan
+        </ul>
 </li>
 @endcanany
 
@@ -169,5 +173,3 @@
     </ul>
 </li>
 @endcanany
-
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('productreservation') }}'><i class='nav-icon la la-question'></i> ProductReservations</a></li>
