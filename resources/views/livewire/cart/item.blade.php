@@ -19,6 +19,15 @@ $product = $item->product;
                         @endif
                     @endforeach
                 @endif
+                @if ($item->product->is_housing && filled(json_decode($item->product_attributes)))
+                    @foreach (json_decode($item->product_attributes) as $attribute)
+                        @foreach ($attribute as $name => $value)
+                            <div class="font-size-sm"><span
+                                class="text-muted mr-2">{{ $name }}:</span>{{ $value }}
+                             </div>
+                        @endforeach
+                    @endforeach
+                @endif
                 <div class="d-inline-block font-size-lg text-accent pt-2">
                     {{ currencyFormat($product->real_price, 'CLP', true) }}
                     <!--$154.<small>00</small>-->

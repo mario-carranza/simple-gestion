@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Cart;
 use App\Models\Seller;
+use App\Models\Product;
 use App\Models\CartItem;
 use Illuminate\Http\Request;
 use App\Models\ProductReservation;
-use App\Http\Livewire\Products\Product;
 use App\Http\Requests\ProductReservationRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -157,6 +157,8 @@ class ProductReservationCrudController extends CrudController
                 },
             ],
         ]);
+
+        $this->setupFilters();
     }
 
     /**
@@ -292,6 +294,21 @@ class ProductReservationCrudController extends CrudController
         $this->setupCreateOperation();
     }
 
+    protected function setupFilters()
+    {
+        CRUD::addFilter([
+            'name'  => 'product',
+            'type'  => 'select2',
+            'label' => 'Servicio'
+        ], function() {
+            return Product::where('is_housing', true)->when(! $this->admin, function($q) {
+                return $q->where('seller_id', $this->userSeller->id);
+            })->get()->pluck('name', 'id')->toArray();
+        }, function($value) {
+            $this->crud->addClause('where', 'product_id', $value);
+        });
+    }
+
     public function changeStatusView($id)
     {
         $data['productReservation'] = ProductReservation::find($id);
@@ -340,6 +357,7 @@ class ProductReservationCrudController extends CrudController
         $session = session()->getId();
         $user = auth()->check() ? auth()->user() : null;
         $cart = Cart::getInstance($user, $session); 
+        $cart->save();
 
         // Add product to Cart
         $cart->cart_items()->where('product_id', $product->id)->delete();
@@ -354,6 +372,7 @@ class ProductReservationCrudController extends CrudController
             'sub_total' => $productReservation->price,
             'total' => $productReservation->price,
             'currency_id' => $product->currency_id,
+            'product_reservation_id' => $productReservation->id,
         ];
 
         if ($product->parent_id) {
@@ -366,6 +385,13 @@ class ProductReservationCrudController extends CrudController
             $data = array_merge($data, ['product_attributes' => json_encode($attributes)]);
         }
 
+        $data['product_attributes'] = json_encode([
+            ['Fecha de Check In' => $productReservation->check_in_date->format('d/m/Y')],
+            ['Fecha de Check Out' => $productReservation->check_out_date->format('d/m/Y')],
+            ['Numero de adultos' => $productReservation->adults_number],
+            ['Numero de niños' => $productReservation->childrens_number],
+        ]);
+
         $item = CartItem::create($data);
 
         $cart->items_count++;
@@ -376,6 +402,6 @@ class ProductReservationCrudController extends CrudController
 
         $cart->update();
 
-        // redirigir al checkout
+        return redirect()->route('checkout');
     }
 }
