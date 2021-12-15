@@ -100,10 +100,12 @@ $product = $item->product;
         </div>
         <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
             <div class="form-group mb-0">
-                @livewire('qty-item', [
-                'qty' => $item->qty,
-                //'parentListener' => 'setQty' implicit
-                ])
+                @if (!$item->product->is_housing && !$item->product->is_tour)
+                    @livewire('qty-item', [
+                    'qty' => $item->qty,
+                    //'parentListener' => 'setQty' implicit
+                    ])
+                @endif
             </div>
             {{--@if ($confirm == $item->id)
                 <button wire:click.prevent="delete" class="btn btn-link px-0 text-danger" type="button"><i

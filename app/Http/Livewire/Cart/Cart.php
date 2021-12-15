@@ -108,6 +108,10 @@ class Cart extends Component
 
     private function addItem(Product $product, $qty = 1)
     {
+        if ($product->is_housing || $product->is_tour) {
+            $this->emit('showToast', '¡Algo sucedio!', 'Este producto no puede ser agregado al carrito directamente.', 3000, 'warning');
+            return false;
+        }
         if ( ! $product->haveSufficientQuantity( $qty )) {
             $this->emit('showToast', '¡Stock insuficiente!', 'No se ha podido añadir al carro.', 3000, 'warning');
             return false;

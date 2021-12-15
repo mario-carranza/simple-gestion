@@ -14,11 +14,11 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="">Fecha de Check In</label>
-                                    <input type="date" class="form-control @error('checkInDate') is-invalid @enderror" wire:model="checkInDate" name="checkInDate">
+                                    <input type="date" class="form-control @error('checkInDate') is-invalid @enderror" wire:model="checkInDate" wire:change="resetCalculation" name="checkInDate">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="">Fecha de Check Out</label>
-                                    <input type="date" class="form-control @error('checkOutDate') is-invalid @enderror" wire:model="checkOutDate" name="checkOutDate">
+                                    <input type="date" class="form-control @error('checkOutDate') is-invalid @enderror" wire:model="checkOutDate" wire:change="resetCalculation" name="checkOutDate">
                                 </div>
                             </div>
                         @endif
@@ -39,11 +39,11 @@
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label for="">Numero de adultos</label>
-                                <input wire:model="adultsNumber" name="adultsNumber" type="number" class="form-control @error('adultsNumber') is-invalid @enderror" placeholder="Numero de adultos">
+                                <input wire:model="adultsNumber" wire:change="resetCalculation" name="adultsNumber" type="number" class="form-control @error('adultsNumber') is-invalid @enderror" placeholder="Numero de adultos">
                             </div>
                             <div class="col-md-4">
                                 <label for="">Numero de niños</label>
-                                <input wire:model="childrensNumber" name="childrensNumber" type="number" class="form-control @error('childrensNumber') is-invalid @enderror" placeholder="Numero de niños">
+                                <input wire:model="childrensNumber" wire:change="resetCalculation" name="childrensNumber" type="number" class="form-control @error('childrensNumber') is-invalid @enderror" placeholder="Numero de niños">
                             </div>
                             <div class="col-md-4">
                                 <button wire:click="calculatePrice" class="btn btn-info btn-block" style="margin-top: 29px">{{ $priceLabel }}</button>
@@ -56,7 +56,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <button {{ $canMakeReservation ? '' : 'disabled' }} wire:click="makeReservation" class="btn btn-primary btn-block">Solicitar Reserva</button>
+                                <button {{ $canMakeReservation ? '' : 'disabled' }} wire:click="makeReservationEvent" class="btn btn-primary btn-block">Solicitar Reserva</button>
                             </div>
                         </div>
                     @elseif ($step === 2)
