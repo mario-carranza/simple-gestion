@@ -983,9 +983,9 @@ class ProductCrudController extends CrudController
     {
         CRUD::addField([
             'name' => 'terms_and_conditions',
-            'label' => 'Terminos y condiciones',
+            'label' => 'Términos y condiciones',
             'type' => 'wysiwyg',
-            'tab' => 'Terminos y condiciones',
+            'tab' => 'Términos y condiciones',
         ]);
     }
 

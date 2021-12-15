@@ -83,6 +83,19 @@ class ProductReservation extends Model
         return Carbon::parse($this->check_out_date)->format('Y-m-d');
     }
 
+    public function getTypeTextAttribute()
+    {
+        switch ($this->type) {
+            case 'housing':
+                return 'Alojamiento';
+                break;
+
+            case 'tour':
+                return 'Tour';
+                break;
+        }
+    }
+
     /*
     |--------------------------------------------------------------------------
     | MUTATORS

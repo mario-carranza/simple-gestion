@@ -94,6 +94,12 @@ class ProductReservationCrudController extends CrudController
         ]);
 
         CRUD::addColumn([
+            'name' => 'type_text',
+            'label' => 'Tipo',
+            'priority' => 1,
+        ]);
+
+        CRUD::addColumn([
             'name' => 'name',
             'label' => 'Nombre',
             'priority' => 1,
@@ -107,7 +113,7 @@ class ProductReservationCrudController extends CrudController
 
         CRUD::addColumn([
             'name' => 'check_in_date',
-            'label' => 'Fecha de check-in',
+            'label' => 'Check In',
             'type' => 'datetime',
             'format' => 'l',
             'priority' => 0,
@@ -115,7 +121,7 @@ class ProductReservationCrudController extends CrudController
 
         CRUD::addColumn([
             'name' => 'check_out_date',
-            'label' => 'Fecha de check-out',
+            'label' => 'Check Out',
             'type' => 'datetime',
             'format' => 'l',
             'priority' => 0,
@@ -379,7 +385,6 @@ class ProductReservationCrudController extends CrudController
         $cart = Cart::getInstance($user, $session); 
         $cart->save();
 
-        // Add product to Cart
         $cart->cart_items()->where('product_id', $product->id)->delete();
 
         $data = [

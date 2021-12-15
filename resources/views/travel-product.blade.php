@@ -87,8 +87,17 @@
                         @if ($product->haveSufficientQuantity(1))
                             <div class="mb-3">
                                 @livewire('products.housing-reservation-form', ['product' => $product], key($product->id))
+                                @if ($product->terms_and_conditions) 
+                                    <div class="text-center">
+                                        <button class="btn btn-link" data-toggle="modal" data-target="#termsModal">
+                                            Términos y condiciones
+                                        </button>
+                                    </div>
+                                @endif 
                             </div>
                         @endif
+
+                        
 
                         @if ($product->is_tour)
                             <div class="mb-4">
@@ -124,7 +133,7 @@
                             @endif
                             <br>
                         @endif
-                        <small>
+                        {{-- <small>
                             <p>Métodos de envíos disponibles (puede variar de acuerdo a la comuna):</p>
                             <ul>
                                 @foreach($product->seller->getResumeAvailableShippingMethods() as $method)
@@ -134,7 +143,7 @@
                         </small>
                         @if(isset($product->seller->maximun_days_for_shipped) && $product->seller->maximun_days_for_shipped > 0)
                             <p><small>Cantidad de días máximo para envío del producto: {{$product->seller->maximun_days_for_shipped}}</small></p>
-                        @endif
+                        @endif --}}
 
                         <!--
                             <div class="d-flex mb-4">

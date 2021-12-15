@@ -35,7 +35,7 @@
         <!-- Tabs-->
         <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item"><a class="nav-link p-4 active" href="#general" data-toggle="tab" role="tab">Información General</a></li>
-            <li class="nav-item"><a class="nav-link p-4" href="#specs" data-toggle="tab" role="tab">Detalles del Producto</a></li>
+            <li class="nav-item"><a class="nav-link p-4" href="#specs" data-toggle="tab" role="tab">Detalles del {{ $product->is_service ? 'Servicio' : 'Producto' }}</a></li>
             {{-- <li class="nav-item"><a class="nav-link p-4" href="#reviews" data-toggle="tab" role="tab">Reviews <span class="font-size-sm opacity-60">(74)</span></a></li> --}}
         </ul>
         @if ($product->is_housing || $product->is_tour)
@@ -130,19 +130,28 @@
                                         </select>
                                     </div>
                                 -->
+                                <div class="pb-4">
                                 @if ($product->haveSufficientQuantity(1))
-                                <div class="d-flex align-items-center pt-2 pb-4">
-                                    @livewire('qty-item', [
-                                        'qty' => 1,
-                                        'emitTo' => [
-                                            'addtocart.cant',
-                                        ]
-                                    ])
-                                    <div style="margin-top: 14px">
-                                    @livewire('products.add-to-cart',['product' => $product, 'view' => 'single'])
+                                    <div class="d-flex align-items-center pt-2 pb-0">
+                                        @livewire('qty-item', [
+                                            'qty' => 1,
+                                            'emitTo' => [
+                                                'addtocart.cant',
+                                            ]
+                                        ])
+                                        <div style="margin-top: 14px">
+                                        @livewire('products.add-to-cart',['product' => $product, 'view' => 'single'])
+                                        </div>
                                     </div>
-                                </div>
+                                    @if ($product->terms_and_conditions) 
+                                        <div class="text-center">
+                                            <button class="btn btn-link" data-toggle="modal" data-target="#termsModal">
+                                                Términos y condiciones
+                                            </button>
+                                        </div>
+                                    @endif 
                                 @endif
+                            </div>
 
                                 <p> Información sobre el vendedor </p>
                                 @if($product->seller->addresses)
@@ -742,4 +751,23 @@
         </div>
     </div>
 </div> --}}
+
+<div class="modal fade" id="termsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Términos y condiciones</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          {!! $product->terms_and_conditions !!}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection
