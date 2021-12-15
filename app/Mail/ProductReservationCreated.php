@@ -38,7 +38,7 @@ class ProductReservationCreated extends Mailable
             $this->buttonLink = route('productreservation.index');
         } else if ($receiver === 'customer') {
             $this->title = 'Tu solicitud de reserva ha sido enviada';
-            $this->text = 'Tu solicitud de reserva para <strong>' . $productReservation->product->name . '</strong> ha sido enviada. Una vez que el vendedor apruebe tu solicitud, recibiras un correo con mas información para completar el pago.';
+            $this->text = 'Tu solicitud de reserva para <strong>' . $productReservation->product->name . '</strong> ha sido enviada. Una vez que el vendedor apruebe tu solicitud, recibirás un correo con mas información para completar el pago.';
             $this->text .= '<br><br>';
             $this->text .= '<b>Información de tu reserva</b>';
             $this->text .= '<br><br>';

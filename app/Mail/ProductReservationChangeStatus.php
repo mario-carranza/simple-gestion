@@ -41,7 +41,7 @@ class ProductReservationChangeStatus extends Mailable
             case ProductReservation::ACCEPTED_STATUS:
                 if ($receiver === 'customer') {
                     $this->title = 'Tu solicitud de reserva ha sido aprobada';
-                    $this->text = 'Tu solicitud de reserva para <strong>' . $productReservation->product->name . '</strong> ha sido aprobada. Abajo encontraras la información de la reserva y un enlace con el cual podras completar el pago.';
+                    $this->text = 'Tu solicitud de reserva para <strong>' . $productReservation->product->name . '</strong> ha sido aprobada. Abajo encontrarás la información de la reserva y un enlace con el cual podrás completar el pago.';
                     $this->text .= '<br><br>';
                     $this->text .= '<b>Información de tu reserva</b>';
                     $this->text .= '<br><br>';

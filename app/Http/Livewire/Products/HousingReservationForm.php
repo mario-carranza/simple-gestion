@@ -14,6 +14,10 @@ use App\Mail\ProductReservationCreated;
 
 class HousingReservationForm extends Component
 {
+    protected $listeners = [
+        'housing:make-reservation' => 'makeReservation',
+    ];
+
     public $step;
     public $product;
     public $checkInDate;
@@ -79,6 +83,13 @@ class HousingReservationForm extends Component
         $this->canMakeReservation = false;
     }
 
+    public function resetCalculation()
+    {
+        $this->canMakeReservation = false;
+        $this->priceLabel = 'Calcular precio';
+        $this->price = null;
+    }
+
     public function calculatePrice()
     {
         $this->price = 0;
@@ -140,6 +151,13 @@ class HousingReservationForm extends Component
         $estimatePrice += ($this->childrensNumber * $this->product->tour_information['childrens_price']);
 
         return $estimatePrice;
+    }
+
+    public function makeReservationEvent()
+    {
+        $this->canMakeReservation = false;
+
+        $this->emit('housing:make-reservation');
     }
 
     public function makeReservation()

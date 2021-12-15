@@ -343,7 +343,7 @@ class CommuneShippingMethodCrudController extends CrudController
                     'name' => 'price',
                     'label' => 'Precio',
                     'type' => 'text',
-                    'default' => 'El precio de envio sera acordado entre el vendedor y el cliente',
+                    'default' => 'El precio de envio será acordado entre el vendedor y el cliente',
                     'attributes' => [
                         'disabled' => true,
                     ]
@@ -389,7 +389,7 @@ class CommuneShippingMethodCrudController extends CrudController
                     'wrapper' => [
                         'class' => 'col-md-12 form-group required'
                     ],
-                    'hint' => 'Este sera el precio de envío empleado cuando el paquete no cumpla ninguna de las condiciones de la tabla de configuracion de precios',
+                    'hint' => 'Este será el precio de envío empleado cuando el paquete no cumpla ninguna de las condiciones de la tabla de configuracion de precios',
                 ],
                 [
                     'name' => 'help_text',

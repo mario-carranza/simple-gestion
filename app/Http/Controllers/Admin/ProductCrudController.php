@@ -842,7 +842,7 @@ class ProductCrudController extends CrudController
             'label' => 'Fecha de salida',
             'type' => 'datetime_picker',
             'wrapper' => ['class' => 'form-group col-md-6'],
-            'tab' => 'Caracteristicas del Tour',
+            'tab' => 'Características del Tour',
             'fake' => true,
             'store_in' => 'tour_information',
         ]);
@@ -852,7 +852,7 @@ class ProductCrudController extends CrudController
             'label' => 'Precio por adulto',
             'type' => 'number',
             'wrapper' => ['class' => 'form-group col-md-3'],
-            'tab' => 'Caracteristicas del Tour',
+            'tab' => 'Características del Tour',
             'fake' => true,
             'store_in' => 'tour_information',
         ]);
@@ -862,7 +862,7 @@ class ProductCrudController extends CrudController
             'label' => 'Precio por niño',
             'type' => 'number',
             'wrapper' => ['class' => 'form-group col-md-3'],
-            'tab' => 'Caracteristicas del Tour',
+            'tab' => 'Características del Tour',
             'fake' => true,
             'store_in' => 'tour_information',
         ]);

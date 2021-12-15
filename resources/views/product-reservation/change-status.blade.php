@@ -96,7 +96,7 @@
 
             if (status === '{{ App\Models\ProductReservation::ACCEPTED_STATUS }}') {
                 await swal({
-                    text: 'La reserva ha sido aceptada. Un correo sera enviado al cliente con instrucciones para proceder el pago de la reserva. Una vez que la reserva sea pagada, cambiara su estado a "Pagada"',
+                    text: 'La reserva ha sido aceptada. Un correo será enviado al cliente con instrucciones para proceder el pago de la reserva. Una vez que la reserva sea pagada, cambiara su estado a "Pagada"',
                     icon: 'success'
                 });
             }
