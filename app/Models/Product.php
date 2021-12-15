@@ -32,7 +32,7 @@ class Product extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
-    protected $fakeColumns = ['inventories_json'];
+    protected $fakeColumns = ['inventories_json', 'tour_information'];
     
     protected $casts = [
         'images_json' => 'array',
@@ -40,6 +40,7 @@ class Product extends Model
         'attributes_json' => 'array',
         'inventories_json' => 'array',
         'housing_pricing' => 'array',
+        'tour_information' => 'array',
     ];
 
     const PRODUCT_TYPE_SIMPLE = 1;

@@ -74,6 +74,7 @@ class ProductCrudController extends CrudController
 
         $this->crud->addButtonFromView('top', 'create_housing', 'product.create_housing', 'end');
 
+        $this->crud->addButtonFromView('top', 'create_tour', 'product.create_tour', 'end');
 
         // If not admin, show only user products
         if(!$this->admin) {
@@ -159,10 +160,11 @@ class ProductCrudController extends CrudController
 
         $this->crud->orderSaveAction('save_and_edit', 1);
 
-        $travelCrudCreate = request()->input('type') === 'travel';
+        $createCrudType = request()->input('type');
 
         $entityNames = [
-            'travel' => 'servicio',
+            'housing' => 'alojamiento',
+            'tour' => 'tour',
         ];
 
         $entityName = $entityNames[request()->input('type')] ?? 'producto';
@@ -218,8 +220,10 @@ class ProductCrudController extends CrudController
             ],
         ]);
 
-        if ($travelCrudCreate) {
-            $this->prepareHousingCreateCrud();
+        if ($createCrudType === 'housing') {
+            $this->prepareTravelCrud($createCrudType);
+        } else if ($createCrudType === 'tour') {
+            $this->prepareTravelCrud($createCrudType);
         } else {
             $this->prepareGeneralCreateCrud();
         }
@@ -322,6 +326,13 @@ class ProductCrudController extends CrudController
         ]);
 
         CRUD::addField([
+            'name' => 'is_tour',
+            'type' => 'hidden',
+            'value' => null,
+            'default' => null,
+        ]);
+
+        CRUD::addField([
             'name' => 'customShowHideSuperAttributes',
             'type' => 'product.show_hide_variants',
         ]);
@@ -339,7 +350,7 @@ class ProductCrudController extends CrudController
         ]);
     }
 
-    protected function prepareHousingCreateCrud()
+    protected function prepareTravelCrud($type)
     {
         CRUD::addField([
             'name' => 'product_type_class',
@@ -393,8 +404,15 @@ class ProductCrudController extends CrudController
         CRUD::addField([
             'name' => 'is_housing',
             'type' => 'hidden',
-            'value' => 1,
-            'default' => 1,
+            'value' => $type === 'housing',
+            'default' => $type === 'housing',
+        ]);
+
+        CRUD::addField([
+            'name' => 'is_tour',
+            'type' => 'hidden',
+            'value' => $type === 'tour',
+            'default' => $type === 'tour',
         ]);
 
         CRUD::addField([
@@ -439,6 +457,7 @@ class ProductCrudController extends CrudController
         if (
             $product->product_type->id == Product::PRODUCT_TYPE_SIMPLE
             && !$product->is_housing
+            && !$product->is_tour
         ) {
             $this->setPriceDimensionsFields($product);
         }
@@ -447,12 +466,16 @@ class ProductCrudController extends CrudController
             $this->setInventoryFields($product);
         }
 
-        if (count($attributes) !== 0) {
-            $this->setAttributesFields($attributes, $product);
-        }
-
         if ($product->is_housing) {
             $this->setHousePricingFields(); 
+        }
+
+        if ($product->is_tour) {
+            $this->setTourFields(); 
+        }
+
+        if (count($attributes) !== 0) {
+            $this->setAttributesFields($attributes, $product);
         }
 
         $this->setTermnAndConditionFields();
@@ -796,6 +819,39 @@ class ProductCrudController extends CrudController
             'min' => 7,
             'max' => 7,
             'tab' => 'Precio', 
+        ]);
+    }
+
+    public function setTourFields()
+    {
+        CRUD::addField([
+            'name' => 'tour_date',
+            'label' => 'Fecha de salida',
+            'type' => 'datetime_picker',
+            'wrapper' => ['class' => 'form-group col-md-6'],
+            'tab' => 'Caracteristicas del Tour',
+            'fake' => true,
+            'store_in' => 'tour_information',
+        ]);
+
+        CRUD::addField([
+            'name' => 'adults_price',
+            'label' => 'Precio por adulto',
+            'type' => 'number',
+            'wrapper' => ['class' => 'form-group col-md-3'],
+            'tab' => 'Caracteristicas del Tour',
+            'fake' => true,
+            'store_in' => 'tour_information',
+        ]);
+
+        CRUD::addField([
+            'name' => 'childrens_price',
+            'label' => 'Precio por niño',
+            'type' => 'number',
+            'wrapper' => ['class' => 'form-group col-md-3'],
+            'tab' => 'Caracteristicas del Tour',
+            'fake' => true,
+            'store_in' => 'tour_information',
         ]);
     }
 
