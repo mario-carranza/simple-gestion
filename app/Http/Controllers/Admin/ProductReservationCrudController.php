@@ -320,6 +320,20 @@ class ProductReservationCrudController extends CrudController
 
     protected function setupFilters()
     {
+        $this->crud->addFilter(
+            [
+        'type'  => 'date_range',
+        'name'  => 'created_at',
+        'label' => 'Fecha'
+        ],
+            false,
+            function ($value) { // if the filter is active, apply these constraints
+                $dates = json_decode($value);
+                $this->crud->addClause('where', 'created_at', '>=', $dates->from);
+                $this->crud->addClause('where', 'created_at', '<=', $dates->to . ' 23:59:59');
+            }
+        );
+
         CRUD::addFilter([
             'name'  => 'product',
             'type'  => 'select2',
@@ -331,6 +345,47 @@ class ProductReservationCrudController extends CrudController
         }, function ($value) {
             $this->crud->addClause('where', 'product_id', $value);
         });
+
+        CRUD::addFilter([
+            'name'  => 'type',
+            'type'  => 'dropdown',
+            'label' => 'Tipo'
+        ], function () {
+            return [
+                'housing' => 'Alojamiento',
+                'tour' => 'Tour',
+            ];
+        }, function ($value) {
+            $this->crud->addClause('where', 'type', $value);
+        });
+
+        $this->crud->addFilter(
+            [
+            'type'  => 'date_range',
+            'name'  => 'check_in',
+            'label' => 'Check In'
+          ],
+            false,
+            function ($value) { // if the filter is active, apply these constraints
+                $dates = json_decode($value);
+                $this->crud->addClause('where', 'check_in_date', '>=', $dates->from);
+                $this->crud->addClause('where', 'check_in_date', '<=', $dates->to . ' 23:59:59');
+            }
+        );
+
+        $this->crud->addFilter(
+            [
+        'type'  => 'date_range',
+        'name'  => 'check_out',
+        'label' => 'Check Out'
+        ],
+            false,
+            function ($value) { // if the filter is active, apply these constraints
+                $dates = json_decode($value);
+                $this->crud->addClause('where', 'check_out_date', '>=', $dates->from);
+                $this->crud->addClause('where', 'check_out_date', '<=', $dates->to . ' 23:59:59');
+            }
+        );
 
         CRUD::addFilter([
             'name'  => 'status',
