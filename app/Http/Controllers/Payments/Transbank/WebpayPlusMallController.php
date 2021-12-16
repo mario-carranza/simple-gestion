@@ -241,7 +241,7 @@ class WebpayPlusMallController extends Controller
 
                 if ($orderItem->product_reservation) {
                     $orderItem->product_reservation->reservation_status = ProductReservation::PAYED_STATUS;
-                    $orderItem->order_id = $order->id;
+                    $orderItem->product_reservation->order_id = $order->id;
                     $orderItem->product_reservation->update();
                 }
 

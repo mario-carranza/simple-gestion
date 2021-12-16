@@ -35,7 +35,7 @@ class ProductReservationCrudController extends CrudController
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     * 
+     *
      * @return void
      */
     public function setup()
@@ -49,17 +49,18 @@ class ProductReservationCrudController extends CrudController
         $this->admin = false;
         $this->userSeller = null;
 
-        if (backpack_user()->can('product_reservation.admin')) {
-            $this->admin = true;
-
-        } else {
-            $this->userSeller = Seller::where('user_id', backpack_user()->id)->firstOrFail();
+        if (backpack_user()) {
+            if (backpack_user()->can('product_reservation.admin')) {
+                $this->admin = true;
+            } else {
+                $this->userSeller = Seller::where('user_id', backpack_user()->id)->firstOrFail();
+            }
         }
     }
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
@@ -77,7 +78,7 @@ class ProductReservationCrudController extends CrudController
             $this->crud->addClause('whereHas', 'product', function ($q) {
                 return $q->where('seller_id', $this->userSeller->id);
             });
-        } 
+        }
 
         CRUD::addColumn([
             'name' => 'created_at',
@@ -176,7 +177,7 @@ class ProductReservationCrudController extends CrudController
 
     /**
      * Define what happens when the Create operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
@@ -308,7 +309,7 @@ class ProductReservationCrudController extends CrudController
 
     /**
      * Define what happens when the Update operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
@@ -319,25 +320,80 @@ class ProductReservationCrudController extends CrudController
 
     protected function setupFilters()
     {
+        $this->crud->addFilter(
+            [
+        'type'  => 'date_range',
+        'name'  => 'created_at',
+        'label' => 'Fecha'
+        ],
+            false,
+            function ($value) { // if the filter is active, apply these constraints
+                $dates = json_decode($value);
+                $this->crud->addClause('where', 'created_at', '>=', $dates->from);
+                $this->crud->addClause('where', 'created_at', '<=', $dates->to . ' 23:59:59');
+            }
+        );
+
         CRUD::addFilter([
             'name'  => 'product',
             'type'  => 'select2',
             'label' => 'Servicio'
-        ], function() {
-            return Product::where('is_housing', true)->when(! $this->admin, function($q) {
+        ], function () {
+            return Product::where('is_housing', true)->orWhere('is_tour', true)->when(! $this->admin, function ($q) {
                 return $q->where('seller_id', $this->userSeller->id);
             })->get()->pluck('name', 'id')->toArray();
-        }, function($value) {
+        }, function ($value) {
             $this->crud->addClause('where', 'product_id', $value);
         });
+
+        CRUD::addFilter([
+            'name'  => 'type',
+            'type'  => 'dropdown',
+            'label' => 'Tipo'
+        ], function () {
+            return [
+                'housing' => 'Alojamiento',
+                'tour' => 'Tour',
+            ];
+        }, function ($value) {
+            $this->crud->addClause('where', 'type', $value);
+        });
+
+        $this->crud->addFilter(
+            [
+            'type'  => 'date_range',
+            'name'  => 'check_in',
+            'label' => 'Check In'
+          ],
+            false,
+            function ($value) { // if the filter is active, apply these constraints
+                $dates = json_decode($value);
+                $this->crud->addClause('where', 'check_in_date', '>=', $dates->from);
+                $this->crud->addClause('where', 'check_in_date', '<=', $dates->to . ' 23:59:59');
+            }
+        );
+
+        $this->crud->addFilter(
+            [
+        'type'  => 'date_range',
+        'name'  => 'check_out',
+        'label' => 'Check Out'
+        ],
+            false,
+            function ($value) { // if the filter is active, apply these constraints
+                $dates = json_decode($value);
+                $this->crud->addClause('where', 'check_out_date', '>=', $dates->from);
+                $this->crud->addClause('where', 'check_out_date', '<=', $dates->to . ' 23:59:59');
+            }
+        );
 
         CRUD::addFilter([
             'name'  => 'status',
             'type'  => 'dropdown',
             'label' => 'Estado'
-        ], function() {
+        ], function () {
             return ProductReservation::STATUS_DICTIRONARY;
-        }, function($value) {
+        }, function ($value) {
             $this->crud->addClause('where', 'reservation_status', $value);
         });
     }
@@ -392,7 +448,7 @@ class ProductReservationCrudController extends CrudController
         // Get cart
         $session = session()->getId();
         $user = auth()->check() ? auth()->user() : null;
-        $cart = Cart::getInstance($user, $session); 
+        $cart = Cart::getInstance($user, $session);
         $cart->save();
 
         $cart->cart_items()->where('product_id', $product->id)->delete();
@@ -427,7 +483,7 @@ class ProductReservationCrudController extends CrudController
                 ['Numero de adultos' => $productReservation->adults_number],
                 ['Numero de niños' => $productReservation->childrens_number],
             ]);
-        } else if ($product->is_tour) {
+        } elseif ($product->is_tour) {
             $data['product_attributes'] = json_encode([
                 ['Fecha y hora' => Carbon::parse($product->tour_information['tour_date'])->format('d/m/Y h:i a ')],
                 ['Numero de adultos' => $productReservation->adults_number],

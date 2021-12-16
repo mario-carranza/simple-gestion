@@ -64,7 +64,7 @@
                                             <div class="card-body card-body-hidden">
                                                 <div class="row">
                                                     <div class="col-md-6">
-                                                        @if ($product->product_type_id == 1)
+                                                        @if ($product->product_type_id == 1 && (!$product->is_housing && !$product->is_tour))
                                                             @livewire('products.add-to-cart',['product' => $product])
                                                         @endif
                                                         <div class="text-center">
