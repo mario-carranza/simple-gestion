@@ -11,7 +11,11 @@
               <div class="col-md-6">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item"><b>Servicio</b>: {{ $productReservation->product->name }}</li>
+                    @if ($productReservation->type === 'tour')
+                    <li class="list-group-item"><b>Fecha</b>: {{ $productReservation->check_in_date->format('d/m/Y') }}</li>
+                    @else
                     <li class="list-group-item"><b>Fecha de Check In</b>: {{ $productReservation->check_in_date->format('d/m/Y') }}</li>
+                    @endif
                     <li class="list-group-item"><b>Numero de adultos</b>: {{ $productReservation->adults_number }}</li>
                     <li class="list-group-item"><b>Nombre</b>: {{ $productReservation->name }}</li>
                     <li class="list-group-item"><b>Teléfono</b>: {{ $productReservation->cellphone }}</li>
@@ -20,7 +24,11 @@
               <div class="col-md-6">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item"><b>Fecha de solicitud</b>: {{ $productReservation->created_at->format('d/m/Y') }}</li>
+                    @if ($productReservation->type === 'tour')
+                    <li class="list-group-item"><b>Hora</b>: {{ $productReservation->check_in_date->format('h:i a') }}</li>
+                    @else
                     <li class="list-group-item"><b>Fecha de Check Out</b>: {{ $productReservation->check_out_date->format('d/m/y') }}</li>
+                    @endif
                     <li class="list-group-item"><b>Numero de niños</b>: {{ $productReservation->childrens_number }}</li>
                     <li class="list-group-item"><b>Email</b>: {{ $productReservation->email }}</li>
                     <li class="list-group-item"><b>Precio</b>: {{ currencyFormat($productReservation->price, 'CLP', true) }}</li>
@@ -30,9 +38,7 @@
         <div class="row mb-3">
             <div class="col">
                 <label for="">Comentarios del cliente</label>
-                <textarea rows="5" class="form-control" readonly>
-                    {{ $productReservation->customer_comment }}
-                </textarea>
+                <textarea rows="5" class="form-control" readonly>{{ $productReservation->customer_comment }}</textarea>
             </div>
         </div>
         <div class="row mb-3">

@@ -65,7 +65,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                Tu solicitud de reserva ha sido enviada al vendedor. En unos días tu reserva será revisada y en caso de ser aprobada, recibirás un correo en tu email con las instruciones para completar el pago y confirmar tu reserva
+                                Tu solicitud de reserva ha sido enviada al vendedor. En unos días tu reserva será revisada y en caso de ser aprobada, recibirás un correo en tu email con las instrucciones para completar el pago y confirmar tu reserva
                             </div>
                         </div>
                     @endif
