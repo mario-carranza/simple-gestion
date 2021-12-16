@@ -9,6 +9,7 @@
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
+    RewriteCond %{HTTP_HOST} !^turismo\. [NC]
     RewriteCond %{HTTP_HOST} !^www\. [NC]
     RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 

@@ -491,6 +491,20 @@ class ProductCrudController extends CrudController
         ]);
 
         CRUD::addField([
+            'name' => 'is_travel',
+            'label' => 'Turismo',
+            'type' => 'checkbox',
+            'tab' => 'Información general'
+        ]);
+
+        CRUD::addField([
+            'name' => 'has_reservation_form',
+            'label' => 'Requiere formulario de reserva',
+            'type' => 'checkbox',
+            'tab' => 'Información general'
+        ]);
+
+        CRUD::addField([
             'name' => 'status',
             'label' => 'Activo',
             'type' => 'checkbox',
