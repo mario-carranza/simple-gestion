@@ -2,10 +2,12 @@
 
 namespace App\Observers;
 
+use Exception;
 use App\Models\Product;
 use Illuminate\Support\Str;
 use App\Mail\ProductCreated;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Backpack\Settings\app\Models\Setting;
 
@@ -14,7 +16,7 @@ class ProductObserver
     /**
      * Handle the product "created" event.
      *
-     * @param  \App\Product  $product
+     * @param  $product
      * @return void
      */
     public function created(Product $product)
@@ -24,7 +26,11 @@ class ProductObserver
             $administrators = Setting::get('administrator_email');
             $recipients = explode(';', $administrators);
             foreach ($recipients as $key => $recipient) {
-                Mail::to($recipient)->send(new ProductCreated($product, $product->seller->visible_name));
+                try {
+                    Mail::to($recipient)->send(new ProductCreated($product, $product->seller->visible_name));
+                } catch (Exception $e) {
+                    Log::error($e->getMessage());
+                }
             }
         }
     }

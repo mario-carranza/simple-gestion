@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Section;
 use App\Models\Seller;
 use Illuminate\Support\Facades\Route;
 
@@ -14,12 +15,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return redirect(backpack_url('dashboard'));
-// });
 
+/* Subdomain sections routes */
+Route::name('section.')->domain('{section}.' . config('simplegestion.app_top_domain'))->group(function () {
+    Route::get("/", 'Frontend\SectionController@index')->name("index");
+    Route::get('/search-products/{category}/{product}', 'Frontend\SectionController@searchProduct')->name('category.search.product');
+    Route::get('/search-products/{category}', 'Frontend\SectionController@getProductsByCategorySlug')->name('category.products');
+    Route::get('/shop-grid', 'Frontend\SectionController@getProductsByCategory')->name("shop-grid");;
+});
+
+/* Domain routes */
 Route::get('/', 'Frontend\HomeController@index')->name('index');
-
 Route::get('/customer/sign', 'Frontend\CustomerController@sign')->name('customer.sign')->middleware(['guest']);
 Route::post('/customer/register', 'Frontend\CustomerController@store')->name('customer.frontend.store');
 Route::post('/customer/login', 'Frontend\CustomerController@authenticate')->name('customer.frontend.login');
@@ -78,12 +84,13 @@ Route::get('/terms-conditions', function () {
     return view('terms-conditions');
 });
 
-//Auth::routes();
 Route::redirect('/login', '/customer/login')->name('login');
 
 Route::get('/shopping-cart', 'Frontend\CartController@shoppingCart')->name('shopping-cart');
 Route::get('/checkout', 'Frontend\CheckoutController@index')->name('checkout');
 Route::get('/filter-products', 'Frontend\HomeController@filterProducts');
+
+Route::get('product-reservation/add-to-cart/{hash}', 'Admin\ProductReservationCrudController@addReservationToCart')->name('product-reservation.add-to-cart');
 
 Route::group([
     'prefix' => '/transbank'
@@ -99,6 +106,3 @@ Route::group([
     Route::get('webpay/mall/download/{order}', 'Payments\Transbank\WebpayPlusMallController@download')->name('transbank.webpayplus.mall.download');
     Route::get('test/{order}', 'Payments\Transbank\WebpayPlusMallController@test')->name('transbank.test.view');
 });
-// Route::get('complete', function(){
-//     return view('payments.transbank.webpay.mall.complete');
-// });

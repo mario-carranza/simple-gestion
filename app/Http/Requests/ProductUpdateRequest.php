@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\SlugRule;
 use App\Http\Requests\Request;
+use App\Models\Product;
 use App\Rules\NumericCommaRule;
 use Illuminate\Validation\Rule;
 use App\Rules\ImagesProductRule;
@@ -12,7 +13,6 @@ use Illuminate\Http\Request as RequestHelper;
 
 class ProductUpdateRequest extends FormRequest
 {
-
     private $prepareData = [
         'images_json',
     ];
@@ -35,7 +35,9 @@ class ProductUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $product = Product::find($this->id);
+
+        $rules = [
             'name' => 'required|min:5|max:255',
             'sku' => [
                 'required',
@@ -98,8 +100,27 @@ class ProductUpdateRequest extends FormRequest
                     }
                 }
             }
-
         ];
+
+        if ($product->is_housing ?? false) {
+            $rules['housing_pricing'] = function ($attribute, $value, $fail) {
+                $value = json_decode($value);
+
+                foreach ($value as $dayPricing) {
+                    if ($dayPricing->childrens_price == '' || $dayPricing->adults_price == '') {
+                        return $fail('El campo de precio para adultos y niños es requerido');
+                    }
+                }
+            };
+        }
+
+        if ($product->is_tour ?? false) {
+            $rules['tour_date'] = ['required'];
+            $rules['adults_price'] = ['required'];
+            $rules['childrens_price'] = ['required'];
+        }
+
+        return $rules;
     }
 
     /**
@@ -124,7 +145,9 @@ class ProductUpdateRequest extends FormRequest
             'seller_id' => 'vendedor',
             'status' => 'estado',
             'categories' => 'categorias',
-            
+            'tour_date' => 'fecha y hora del tour',
+            'adults_price' => 'precio por adulto',
+            'childrens_price' => 'precio por niño',
         ];
     }
 

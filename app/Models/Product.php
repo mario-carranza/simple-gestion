@@ -32,12 +32,15 @@ class Product extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
-    protected $fakeColumns = ['inventories_json'];
+    protected $fakeColumns = ['inventories_json', 'tour_information'];
+    
     protected $casts = [
         'images_json' => 'array',
         'variations_json' => 'array',
         'attributes_json' => 'array',
         'inventories_json' => 'array',
+        'housing_pricing' => 'array',
+        'tour_information' => 'array',
     ];
 
     const PRODUCT_TYPE_SIMPLE = 1;
@@ -513,6 +516,19 @@ class Product extends Model
         } else {
             return [0, 0];
         }
+    }
+
+    public function getHousingPriceRange() : array
+    {
+        $minAdults = collect($this->housing_pricing)->pluck('adults_price')->min();
+        $maxAdults = collect($this->housing_pricing)->pluck('adults_price')->max();
+        $minChildrens = collect($this->housing_pricing)->pluck('childrens_price')->min();
+        $maxChildrens = collect($this->housing_pricing)->pluck('childrens_price')->max();
+
+        return [
+            min($minAdults, $minChildrens),
+            max($maxChildrens, $maxAdults),
+        ];
     }
 
     /*

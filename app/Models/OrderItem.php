@@ -72,6 +72,11 @@ class OrderItem extends Model
     {
         return $this->belongsTo(Seller::class);
     }
+
+    public function product_reservation()
+    {
+        return $this->belongsTo(ProductReservation::class);
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES

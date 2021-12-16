@@ -19,6 +19,15 @@ $product = $item->product;
                         @endif
                     @endforeach
                 @endif
+                @if (($item->product->is_housing || $item->product->is_tour) && filled(json_decode($item->product_attributes)))
+                    @foreach (json_decode($item->product_attributes) as $attribute)
+                        @foreach ($attribute as $name => $value)
+                            <div class="font-size-sm"><span
+                                class="text-muted mr-2">{{ $name }}:</span>{{ $value }}
+                             </div>
+                        @endforeach
+                    @endforeach
+                @endif
                 <div class="d-inline-block font-size-lg text-accent pt-2">
                     {{ currencyFormat($product->real_price, 'CLP', true) }}
                     <!--$154.<small>00</small>-->
@@ -91,10 +100,12 @@ $product = $item->product;
         </div>
         <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
             <div class="form-group mb-0">
-                @livewire('qty-item', [
-                'qty' => $item->qty,
-                //'parentListener' => 'setQty' implicit
-                ])
+                @if (!$item->product->is_housing && !$item->product->is_tour)
+                    @livewire('qty-item', [
+                    'qty' => $item->qty,
+                    //'parentListener' => 'setQty' implicit
+                    ])
+                @endif
             </div>
             {{--@if ($confirm == $item->id)
                 <button wire:click.prevent="delete" class="btn btn-link px-0 text-danger" type="button"><i

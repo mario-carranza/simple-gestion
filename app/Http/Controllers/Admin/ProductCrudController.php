@@ -72,6 +72,10 @@ class ProductCrudController extends CrudController
     {
         $this->crud->enableBulkActions();
 
+        $this->crud->addButtonFromView('top', 'create_housing', 'product.create_housing', 'end');
+
+        $this->crud->addButtonFromView('top', 'create_tour', 'product.create_tour', 'end');
+
         // If not admin, show only user products
         if(!$this->admin) {
             $this->crud->addClause('where', 'seller_id', '=', $this->userSeller->id);
@@ -91,7 +95,7 @@ class ProductCrudController extends CrudController
             ]);
 
 
-        if($this->admin) {
+        if ($this->admin) {
             CRUD::addColumn([
                 'name' => 'seller',
                 'label' => 'Vendedor',
@@ -99,7 +103,6 @@ class ProductCrudController extends CrudController
                 'attribute' => 'visible_name',
             ]);
         }
-
 
         CRUD::addColumn([
             'name' => 'name',
@@ -157,9 +160,18 @@ class ProductCrudController extends CrudController
 
         $this->crud->orderSaveAction('save_and_edit', 1);
 
+        $createCrudType = request()->input('type');
+
+        $entityNames = [
+            'housing' => 'alojamiento',
+            'tour' => 'tour',
+        ];
+
+        $entityName = $entityNames[request()->input('type')] ?? 'producto';
+
         CRUD::addField([
             'name' => 'name',
-            'label' => 'Nombre del producto',
+            'label' => 'Nombre del ' . $entityName,
             'type' => 'text',
         ]);
 
@@ -174,19 +186,6 @@ class ProductCrudController extends CrudController
             'label' => 'URL Key (Slug)',
             'type' => 'text',
         ]);
-
-        /* CRUD::addField([
-            'label'     => "Categoría",
-            'type'      => 'select2_multiple',
-            'name'      => 'categories',
-            'entity'    => 'categories',
-            'model'     => "App\Models\ProductCategory",
-            'attribute' => 'name',
-            'pivot'     => true,
-            'attributes' => [
-                'id' => 'categories',
-            ]
-        ]); */
 
         CRUD::addField([
             'label'     => "Categoría",
@@ -205,12 +204,11 @@ class ProductCrudController extends CrudController
             ]
         ]);
 
-
         CRUD::addField([
-            'label'       => "Clase de producto",
+            'label'       => "Clase de " . $entityName,
             'type'        => "select2_from_ajax",
             'name'        => 'product_class_id',
-            'placeholder' => 'Selecciona la clase de producto',
+            'placeholder' => 'Selecciona la clase de ' . $entityName,
             'entity'      => 'product_class',
             'attribute'   => "name",
             'data_source' => url("admin/api/productclass/get"),
@@ -222,6 +220,17 @@ class ProductCrudController extends CrudController
             ],
         ]);
 
+        if ($createCrudType === 'housing') {
+            $this->prepareTravelCrud($createCrudType);
+        } else if ($createCrudType === 'tour') {
+            $this->prepareTravelCrud($createCrudType);
+        } else {
+            $this->prepareGeneralCreateCrud();
+        }
+    }
+
+    protected function prepareGeneralCreateCrud()
+    {
         CRUD::addField([
             'name' => 'product_type_class',
             'type' => 'product.product_class_hint',
@@ -260,7 +269,6 @@ class ProductCrudController extends CrudController
                'id' => 'super_attributes_wrapper',
             ]
         ]);
-
 
         CRUD::addField([
             'name' => 'seller_id',
@@ -310,6 +318,24 @@ class ProductCrudController extends CrudController
             ],
         ]);
 
+        CRUD::addField([
+            'name' => 'is_housing',
+            'type' => 'hidden',
+            'value' => null,
+            'default' => null,
+        ]);
+
+        CRUD::addField([
+            'name' => 'is_tour',
+            'type' => 'hidden',
+            'value' => null,
+            'default' => null,
+        ]);
+
+        CRUD::addField([
+            'name' => 'is_travel',
+            'type' => 'hidden',
+        ]);
 
         CRUD::addField([
             'name' => 'customShowHideSuperAttributes',
@@ -327,8 +353,91 @@ class ProductCrudController extends CrudController
             'origen' => 'name',
             'slug' => 'url_key',
         ]);
+    }
 
+    protected function prepareTravelCrud($type)
+    {
+        CRUD::addField([
+            'name' => 'product_type_class',
+            'type' => 'product.product_class_hint',
+        ]);
 
+        CRUD::addField([
+            'name' => 'product_type_id',
+            'type' => 'hidden',
+            'default' => 1,
+        ]);
+
+        CRUD::addField([
+            'name' => 'seller_id',
+            'label' => 'Vendedor',
+            'entity' => 'seller',
+            'default' => $this->userSeller ?? '',
+            'type' => 'relationship',
+            'attribute' => 'visible_name',
+            'placeholder' => 'selecciona un vendedor',
+            'wrapper' => [
+               'style' => $this->admin ? '' : 'display:none',
+            ],
+        ]);
+
+        CRUD::addField([
+            'name' => 'currency_id',
+            'label' => 'Moneda',
+            'type' => 'relationship',
+            'entity' => 'currency',
+            'default' => 63,
+            'wrapper' => [
+                'style' => 'display:none',
+            ],
+        ]);
+
+        CRUD::addField([
+            'name' => 'is_service',
+            'type' => 'hidden',
+            'value' => 1,
+            'default' => 1,
+        ]);
+
+        CRUD::addField([
+            'name' => 'use_inventory_control',
+            'type' => 'hidden',
+            'value' => 0,
+            'default' => 0,
+        ]);
+
+        CRUD::addField([
+            'name' => 'is_housing',
+            'type' => 'hidden',
+            'value' => $type === 'housing',
+            'default' => $type === 'housing',
+        ]);
+
+        CRUD::addField([
+            'name' => 'is_tour',
+            'type' => 'hidden',
+            'value' => $type === 'tour',
+            'default' => $type === 'tour',
+        ]);
+
+        CRUD::addField([
+            'name' => 'is_travel',
+            'type' => 'hidden',
+            'default' => 1,
+            'value' => 1,
+        ]);
+
+        CRUD::addField([
+            'name' => 'customJs',
+            'type' => 'product.custom_js',
+        ]);
+
+        CRUD::addField([
+            'name' => 'slug_formatter',
+            'type' => 'slug_formatter',
+            'origen' => 'name',
+            'slug' => 'url_key',
+        ]);
     }
 
     /**
@@ -349,36 +458,42 @@ class ProductCrudController extends CrudController
             CRUD::setValidation(ProductVariantUpdateRequest::class);
         }
 
-        // General fields
         $this->setGeneralFields();
 
-        // Images fields
         $this->setImagesFields();
 
-        // Variations fields
-        if($product->product_type->id == Product::PRODUCT_TYPE_CONFIGURABLE) {
+        if ($product->product_type->id == Product::PRODUCT_TYPE_CONFIGURABLE) {
             $this->setVariationsField($product);
         }
 
-        // Price and Shipping dimensions fields
-        if($product->product_type->id == Product::PRODUCT_TYPE_SIMPLE) {
+        if (
+            $product->product_type->id == Product::PRODUCT_TYPE_SIMPLE
+            && !$product->is_housing
+            && !$product->is_tour
+        ) {
             $this->setPriceDimensionsFields($product);
         }
 
-        // Inventory control fields
-        if($product->product_type->id == Product::PRODUCT_TYPE_SIMPLE && $product->use_inventory_control) {
+        if ($product->product_type->id == Product::PRODUCT_TYPE_SIMPLE && $product->use_inventory_control) {
             $this->setInventoryFields($product);
         }
 
-        // Custom attributes fields
-        if(count($attributes) !== 0) {
+        if ($product->is_housing) {
+            $this->setHousePricingFields(); 
+        }
+
+        if ($product->is_tour) {
+            $this->setTourFields(); 
+        }
+
+        if (count($attributes) !== 0) {
             $this->setAttributesFields($attributes, $product);
         }
 
-        // SEO fields
+        $this->setTermnAndConditionFields();
+
         $this->setSeoFields();
 
-        // Status and visibility fields
         if ($this->admin) {
             $this->setStatusVisibilityFields();
         }
@@ -488,6 +603,20 @@ class ProductCrudController extends CrudController
             'wrapper' => [
                 'style' => 'display:none',
             ],
+        ]);
+
+        CRUD::addField([
+            'name' => 'is_travel',
+            'label' => 'Turismo',
+            'type' => 'checkbox',
+            'tab' => 'Información general'
+        ]);
+
+        CRUD::addField([
+            'name' => 'has_reservation_form',
+            'label' => 'Requiere formulario de reserva',
+            'type' => 'checkbox',
+            'tab' => 'Información general'
         ]);
 
         CRUD::addField([
@@ -665,6 +794,80 @@ class ProductCrudController extends CrudController
         }
     }
 
+    public function setHousePricingFields()
+    {
+        CRUD::addField([
+            'name' => 'housing_pricing',
+            'label' => 'Precios por dia',
+            'type' => 'product.table_with_types',
+            'columns' => [
+                'day' => 'Dia',
+                'adults_price' => 'Precio por adulto',
+                'childrens_price' => 'Precio por niño',
+            ],
+            'column_types' => [
+                'day' => [
+                    'type' => 'select',
+                    'disabled' => true,
+                    'options' => [
+                        0 => 'Lunes',
+                        1 => 'Martes',
+                        2 => 'Miercoles',
+                        3 => 'Jueves',
+                        4 => 'Viernes',
+                        5 => 'Sabado',
+                        6 => 'Domingo',
+                    ],
+                ],
+            ],
+            'default' => [
+                [ 'day' => 0, ],
+                [ 'day' => 1, ],
+                [ 'day' => 2, ],
+                [ 'day' => 3, ],
+                [ 'day' => 4, ],
+                [ 'day' => 5, ],
+                [ 'day' => 6, ],
+            ],
+            'min' => 7,
+            'max' => 7,
+            'tab' => 'Precio', 
+        ]);
+    }
+
+    public function setTourFields()
+    {
+        CRUD::addField([
+            'name' => 'tour_date',
+            'label' => 'Fecha de salida',
+            'type' => 'datetime_picker',
+            'wrapper' => ['class' => 'form-group col-md-6'],
+            'tab' => 'Características del Tour',
+            'fake' => true,
+            'store_in' => 'tour_information',
+        ]);
+
+        CRUD::addField([
+            'name' => 'adults_price',
+            'label' => 'Precio por adulto',
+            'type' => 'number',
+            'wrapper' => ['class' => 'form-group col-md-3'],
+            'tab' => 'Características del Tour',
+            'fake' => true,
+            'store_in' => 'tour_information',
+        ]);
+
+        CRUD::addField([
+            'name' => 'childrens_price',
+            'label' => 'Precio por niño',
+            'type' => 'number',
+            'wrapper' => ['class' => 'form-group col-md-3'],
+            'tab' => 'Características del Tour',
+            'fake' => true,
+            'store_in' => 'tour_information',
+        ]);
+    }
+
     public function setStatusVisibilityFields() {
         CRUD::addField([
             'name' => 'is_approved',
@@ -773,6 +976,16 @@ class ProductCrudController extends CrudController
             'name' => 'update_custom_js',
             'type' => 'product.update_custom_js',
             'tab' => 'Configuración SEO',
+        ]);
+    }
+
+    public function setTermnAndConditionFields()
+    {
+        CRUD::addField([
+            'name' => 'terms_and_conditions',
+            'label' => 'Términos y condiciones',
+            'type' => 'wysiwyg',
+            'tab' => 'Términos y condiciones',
         ]);
     }
 
@@ -1090,7 +1303,6 @@ class ProductCrudController extends CrudController
             $this->crud->addClause('where', 'sku', 'LIKE', '%' . $value . '%');
         });
 
-
         if ($this->admin) {
             CRUD::addFilter([
                 'name'  => 'seller_id',
@@ -1135,7 +1347,6 @@ class ProductCrudController extends CrudController
                 $query->where('id', $value);
             });
         });
-
 
         CRUD::addFilter([
             'name'  => 'is_approved',

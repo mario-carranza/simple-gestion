@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Products;
 
+use App\Models\Section;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\ProductCategory;
@@ -26,6 +27,7 @@ class CardGeneral extends Component
     public $renderIn = null;
     public $render = null;
     public $filters = null;
+    public $sectionId = null;
 
     protected $listeners = [
         'shop-grid.filter' => 'filterProducts',
@@ -56,14 +58,22 @@ class CardGeneral extends Component
         return view('livewire.products.card-general', $render);
     }
 
-    public function mount($paginateBy, $showPaginate, $columnLg = null, $showFrom, $valuesQuery = null, $renderIn = 'shop-grid')
-    {
+    public function mount(
+        $paginateBy, 
+        $showPaginate, 
+        $columnLg = null, 
+        $showFrom, 
+        $valuesQuery = null, 
+        $renderIn = 'shop-grid',
+        $sectionId = null
+    ) {
         $this->paginateBy = $paginateBy;
         $this->columnLg = $columnLg;
         $this->showPaginate = $showPaginate;
         $this->showFrom = $showFrom;
         $this->valuesQuery = $valuesQuery;
         $this->renderIn = $renderIn;
+        $this->sectionId = $sectionId;
     }
 
     public function filterProducts($data)
@@ -109,7 +119,7 @@ class CardGeneral extends Component
         return 'paginator';
     }
 
-    private function baseQuery($random = false, $category_id = null, $product_search = null, $seller_id = null)
+    private function baseQuery($random = false, $category_id = null, $product_search = null, $seller_id = null, $section_id = null)
     {
         $this->sortingField = $this->sortingField ?? 'created_at';
         $this->sortingDirection = $this->sortingDirection ?? 'DESC';
@@ -120,6 +130,12 @@ class CardGeneral extends Component
             ->with('categories')
             ->whereHas('seller', function ($query) {
                 return $query->where('is_approved', '=', '1');
+            })
+            ->when($this->sectionId, function ($query) {
+                $section = Section::find($this->sectionId);
+                return $query->whereHas('categories', function ($query) use ($section) {
+                    return $query->whereIn('id', $section->product_categories->pluck('id')->toArray());
+                });
             })
             ->when($category_id, function ($query) use ($category_id) {
                 if ($category_id != 0) {

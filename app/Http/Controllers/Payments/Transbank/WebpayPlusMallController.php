@@ -13,6 +13,7 @@ use App\Models\OrderPayment;
 use App\Models\PaymentMethod;
 use App\Models\PaymentMethodSeller;
 use App\Models\Product;
+use App\Models\ProductReservation;
 use App\Models\Seller;
 use App\Services\OrderLoggerService;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -234,11 +235,18 @@ class WebpayPlusMallController extends Controller
              $order->status = 2; //paid
              $order->update();
 
-            // Reducir invententario de product
-            // Por cada item
             $orderItems = $order->order_items;
 
             foreach($orderItems as $orderItem) {
+
+                if ($orderItem->product_reservation) {
+                    $orderItem->product_reservation->reservation_status = ProductReservation::PAYED_STATUS;
+                    $orderItem->order_id = $order->id;
+                    $orderItem->product_reservation->update();
+                }
+
+                // Reducir invententario de product
+                // Por cada item
                 if($orderItem->product->use_inventory_control) {
                     // 1. obtener cantidad en stock (cual bodega)
                     $qtyInStock = $orderItem->product->inventories->first()->pivot->qty;

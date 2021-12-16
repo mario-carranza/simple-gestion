@@ -2,74 +2,47 @@
 
 namespace App\Models;
 
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class CartItem extends Model
+class Section extends Model
 {
+    use CrudTrait;
+    use SoftDeletes;
+
     /*
     |--------------------------------------------------------------------------
     | GLOBAL VARIABLES
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'cart_items';
+    protected $table = 'sections';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
+    protected $casts = [
+        'json_value' => 'array',
+    ];
 
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-    public function updateTotals()
-    {
-        $this->sub_total = $this->price * $this->qty;
-        $this->total = $this->price * $this->qty; //@todo calculate total
-    }
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-    public function cart()
+    public function product_categories()
     {
-        return $this->belongsTo(Cart::class);
+        return $this->belongsToMany(ProductCategory::class, 'section_categories');
     }
-
-    public function currency()
-    {
-        return $this->belongsTo(Currency::class);
-    }
-
-    public function product()
-    {
-        return $this->belongsTo(Product::class);
-    }
-
-    public function parent()
-    {
-        return $this->belongsTo(Product::class);
-    }
-
-    public function product_reservation()
-    {
-        return $this->belongsTo(ProductReservation::class);
-    }
-
-    /*
-    public function payment()
-    {
-        return $this->belongsTo(Payment::class);
-    }
-
-    public function shipping()
-    {
-        return $this->belongsTo(Shipping::class);
-    }*/
 
     /*
     |--------------------------------------------------------------------------
@@ -82,6 +55,19 @@ class CartItem extends Model
     | ACCESSORS
     |--------------------------------------------------------------------------
     */
+    public function getStatusDescriptionAttribute()
+    {
+        switch ($this->status) {
+            case 1:
+                return 'Activo';
+                break;
+            case 0:
+                return 'Inactivo';
+                break;
+            default:
+                break;
+        }
+    }
 
     /*
     |--------------------------------------------------------------------------

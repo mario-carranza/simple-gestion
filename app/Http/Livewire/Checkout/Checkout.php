@@ -2,11 +2,11 @@
 
 namespace App\Http\Livewire\Checkout;
 
-use App\Models\CartItem;
 use App\Models\Order;
+use Livewire\Component;
+use App\Models\CartItem;
 use App\Models\OrderItem;
 use App\Models\ShippingMethod;
-use Livewire\Component;
 
 class Checkout extends Component
 {
@@ -359,6 +359,7 @@ class Checkout extends Component
                 $orderitem->shipping_total = $item->shipping_total;
                 $orderitem->sub_total = $item->price * $item->qty;
                 $orderitem->total = ($item->price * $item->qty) + $item->shipping_total;
+                $orderitem->product_reservation_id = $item->product_reservation_id;
                 $orderitem->save();
                 //$shippingtotal_order += $item->shipping_total * $item->qty;
                 //$subtotal_order += $item->price * $item->qty;

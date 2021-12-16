@@ -2,74 +2,60 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 
-class CartItem extends Model
+class ProductReservation extends Model
 {
+    use CrudTrait;
+
     /*
     |--------------------------------------------------------------------------
     | GLOBAL VARIABLES
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'cart_items';
+    protected $table = 'product_reservations';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
     // protected $fillable = [];
     // protected $hidden = [];
-    // protected $dates = [];
+    protected $dates = [
+        'check_in_date',
+        'check_out_date',
+        'created_at',
+    ];
 
+    const PENDING_STATUS = 'pending';
+    const REJECTED_STATUS = 'rejected';
+    const ACCEPTED_STATUS = 'accepted';
+    const PAYED_STATUS = 'payed';
+    const CANCELED_STATUS = 'canceled';
+
+    const STATUS_DICTIRONARY = [
+        self::PENDING_STATUS => 'Pendiente',
+        self::REJECTED_STATUS => 'Rechazada',
+        self::ACCEPTED_STATUS => 'Aceptada',
+        self::PAYED_STATUS => 'Pagada',
+        self::CANCELED_STATUS => 'Cancelada',
+    ];
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-    public function updateTotals()
-    {
-        $this->sub_total = $this->price * $this->qty;
-        $this->total = $this->price * $this->qty; //@todo calculate total
-    }
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-    public function cart()
-    {
-        return $this->belongsTo(Cart::class);
-    }
-
-    public function currency()
-    {
-        return $this->belongsTo(Currency::class);
-    }
-
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
-
-    public function parent()
-    {
-        return $this->belongsTo(Product::class);
-    }
-
-    public function product_reservation()
-    {
-        return $this->belongsTo(ProductReservation::class);
-    }
-
-    /*
-    public function payment()
-    {
-        return $this->belongsTo(Payment::class);
-    }
-
-    public function shipping()
-    {
-        return $this->belongsTo(Shipping::class);
-    }*/
 
     /*
     |--------------------------------------------------------------------------
@@ -82,6 +68,33 @@ class CartItem extends Model
     | ACCESSORS
     |--------------------------------------------------------------------------
     */
+    public function getReservationStatusTextAttribute()
+    {
+        return self::STATUS_DICTIRONARY[$this->reservation_status] ?? 'Desconocido';
+    }
+
+    public function getCheckInDateOnlyDateAttribute()
+    {
+        return Carbon::parse($this->check_in_date)->format('Y-m-d');
+    }
+
+    public function getCheckOutDateOnlyDateAttribute()
+    {
+        return Carbon::parse($this->check_out_date)->format('Y-m-d');
+    }
+
+    public function getTypeTextAttribute()
+    {
+        switch ($this->type) {
+            case 'housing':
+                return 'Alojamiento';
+                break;
+
+            case 'tour':
+                return 'Tour';
+                break;
+        }
+    }
 
     /*
     |--------------------------------------------------------------------------
