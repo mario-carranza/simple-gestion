@@ -114,7 +114,7 @@ class ProductReservationCrudController extends CrudController
         CRUD::addColumn([
             'name' => 'check_in_date',
             'label' => 'Check In',
-            'type' => 'datetime',
+            'type' => 'product_reservations.datetime',
             'format' => 'l',
             'priority' => 0,
         ]);
@@ -122,7 +122,7 @@ class ProductReservationCrudController extends CrudController
         CRUD::addColumn([
             'name' => 'check_out_date',
             'label' => 'Check Out',
-            'type' => 'datetime',
+            'type' => 'product_reservations.datetime',
             'format' => 'l',
             'priority' => 0,
         ]);
@@ -219,28 +219,38 @@ class ProductReservationCrudController extends CrudController
         ]);
 
         CRUD::addField([
-            'name' => 'celphone',
+            'name' => 'cellphone',
             'label' => 'Teléfono celular',
             'type' => 'text',
             'wrapper' => ['class' => 'form-group col-md-4'],
             'attributes' => ['readonly' => true],
         ]);
 
-        CRUD::addField([
-            'name' => 'check_in_date_only_date',
-            'label' => 'Fecha de Check In',
-            'type' => 'date',
-            'wrapper' => ['class' => 'form-group col-md-3'],
-            'attributes' => ['readonly' => true],
-        ]);
-
-        CRUD::addField([
-            'name' => 'check_out_date_only_date',
-            'label' => 'Fecha de Check Out',
-            'type' => 'date',
-            'wrapper' => ['class' => 'form-group col-md-3'],
-            'attributes' => ['readonly' => true],
-        ]);
+        if ($reservation->type === 'tour') {
+            CRUD::addField([
+                'name' => 'check_in_date',
+                'label' => 'Fecha del Tour',
+                'type' => 'datetime',
+                'wrapper' => ['class' => 'form-group col-md-6'],
+                'attributes' => ['readonly' => true],
+            ]);
+        } else {
+            CRUD::addField([
+                'name' => 'check_in_date_only_date',
+                'label' => 'Fecha de Check In',
+                'type' => 'date',
+                'wrapper' => ['class' => 'form-group col-md-3'],
+                'attributes' => ['readonly' => true],
+            ]);
+    
+            CRUD::addField([
+                'name' => 'check_out_date_only_date',
+                'label' => 'Fecha de Check Out',
+                'type' => 'date',
+                'wrapper' => ['class' => 'form-group col-md-3'],
+                'attributes' => ['readonly' => true],
+            ]);
+        }
 
         CRUD::addField([
             'name' => 'adults_number',

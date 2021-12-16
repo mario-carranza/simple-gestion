@@ -612,12 +612,12 @@ class ProductCrudController extends CrudController
             'tab' => 'Información general'
         ]);
 
-        CRUD::addField([
+        /* CRUD::addField([
             'name' => 'has_reservation_form',
             'label' => 'Requiere formulario de reserva',
             'type' => 'checkbox',
             'tab' => 'Información general'
-        ]);
+        ]); */
 
         CRUD::addField([
             'name' => 'status',
