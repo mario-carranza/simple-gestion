@@ -132,6 +132,34 @@ class HousingReservationForm extends Component
 
             $pricingDay = $pricingData->where('day', $dayNumber)->first();
 
+            $estimatePrice += $pricingDay['price_per_night'];
+        }
+
+        return $estimatePrice;
+    }
+
+    /**
+     * @deprecated not in used
+     */
+    public function calculateHousingPricePerPerson() : float
+    {
+        $checkInDate = Carbon::parse($this->checkInDate)->midDay();
+
+        $checkOutDate = Carbon::parse($this->checkOutDate)->midDay();
+
+        $datePeriod = new CarbonPeriod($checkInDate, '1 days', $checkOutDate);
+        
+        $pricingData = collect($this->product->housing_pricing);
+
+        $estimatePrice = 0;
+
+        foreach ($datePeriod as $i => $day) {
+            if ($i === $datePeriod->count() - 1) continue;
+
+            $dayNumber = $day->dayOfWeekIso - 1;
+
+            $pricingDay = $pricingData->where('day', $dayNumber)->first();
+
             $adultsPrice = $pricingDay['adults_price'] * $this->adultsNumber;
 
             $childrensPrice = $pricingDay['childrens_price'] * $this->childrensNumber;

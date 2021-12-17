@@ -107,8 +107,8 @@ class ProductUpdateRequest extends FormRequest
                 $value = json_decode($value);
 
                 foreach ($value as $dayPricing) {
-                    if ($dayPricing->childrens_price == '' || $dayPricing->adults_price == '') {
-                        return $fail('El campo de precio para adultos y niños es requerido');
+                    if ($dayPricing->price_per_night == '') {
+                        return $fail('El campo de precio por noche es requerido');
                     }
                 }
             };

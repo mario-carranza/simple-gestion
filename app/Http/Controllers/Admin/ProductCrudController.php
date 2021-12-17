@@ -802,8 +802,7 @@ class ProductCrudController extends CrudController
             'type' => 'product.table_with_types',
             'columns' => [
                 'day' => 'Dia',
-                'adults_price' => 'Precio por adulto',
-                'childrens_price' => 'Precio por niño',
+                'price_per_night' => 'Precio por noche',
             ],
             'column_types' => [
                 'day' => [
