@@ -115,9 +115,9 @@ class ProductUpdateRequest extends FormRequest
         }
 
         if ($product->is_tour ?? false) {
-            $rules['tour_date'] = ['required'];
+            /* $rules['tour_date'] = ['required'];
             $rules['adults_price'] = ['required'];
-            $rules['childrens_price'] = ['required'];
+            $rules['childrens_price'] = ['required']; */
         }
 
         return $rules;

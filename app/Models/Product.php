@@ -32,7 +32,7 @@ class Product extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
-    protected $fakeColumns = ['inventories_json', 'tour_information'];
+    protected $fakeColumns = ['inventories_json'];
     
     protected $casts = [
         'images_json' => 'array',

@@ -16,6 +16,8 @@ class HousingReservationForm extends Component
 {
     protected $listeners = [
         'housing:make-reservation' => 'makeReservation',
+        'housing:calculateHours' => 'calculteTourAvailableHours',
+        'housing:resetCalculation' => 'resetCalculation',
     ];
 
     public $step;
@@ -31,6 +33,21 @@ class HousingReservationForm extends Component
     public $price;
     public $canMakeReservation;
     public $comments;
+    public $tourDate;
+    public $tourHour;
+    public $disabledDays;
+    public $availableHours = [];
+    public $tourPricingData = [];
+ 
+    const daysMapping = [
+        0 => 1,
+        1 => 2,
+        2 => 3,
+        3 => 4,
+        4 => 5,
+        5 => 6,
+        6 => 0,
+    ];
 
     private function getRulesValidations() 
     {
@@ -45,6 +62,11 @@ class HousingReservationForm extends Component
         if ($this->product->is_housing) {
             $rules['checkOutDate'] = 'required|date|after:checkInDate';
             $rules['checkInDate'] = 'required|date';
+        }
+
+        if ($this->product->is_tour) {
+            $rules['tourDate'] = 'required|date';
+            $rules['tourHour'] = 'required|min:1';
         }
 
         return $rules;
@@ -64,6 +86,14 @@ class HousingReservationForm extends Component
         $this->priceLabel = 'Calcular precio';
 
         $this->canMakeReservation = false;
+
+        if ($this->product->is_tour) {
+            $this->disabledDays = collect($product->tour_information)->map(function ($item) {
+                return (int) self::daysMapping[$item['day']];
+            })->values();
+            
+            $this->disabledDays = collect([0,1,2,3,4,5,6])->diff($this->disabledDays->unique())->values()->toArray();
+        }
     }
 
     public function initModal()
@@ -83,11 +113,30 @@ class HousingReservationForm extends Component
         $this->canMakeReservation = false;
     }
 
+    public function calculteTourAvailableHours()
+    {
+        if (! $this->tourDate) return false;
+
+        $dayNumber = Carbon::parse($this->tourDate)->dayOfWeekIso - 1;
+
+        $this->availableHours = collect($this->product->tour_information)
+                            ->where('day', $dayNumber)
+                            ->mapWithKeys(function ($item) {
+                                return [
+                                    $item['hour'] => Carbon::parse($item['hour'])->format('h:i a ')
+                                ];
+                            });
+    }
+
     public function resetCalculation()
     {
         $this->canMakeReservation = false;
         $this->priceLabel = 'Calcular precio';
         $this->price = null;
+
+        if ($this->tourDate && $this->tourHour) {
+            $this->setTourPricingData();
+        }
     }
 
     public function calculatePrice()
@@ -174,11 +223,28 @@ class HousingReservationForm extends Component
     {
         $estimatePrice = 0;
 
-        $estimatePrice += ($this->adultsNumber * $this->product->tour_information['adults_price']);
+        $this->setTourPricingData();
 
-        $estimatePrice += ($this->childrensNumber * $this->product->tour_information['childrens_price']);
+        $estimatePrice += ($this->adultsNumber * $this->tourPricingData['adults_price']);
+
+        $estimatePrice += ($this->childrensNumber * $this->tourPricingData['childrens_price']);
 
         return $estimatePrice;
+    }
+
+    public function setTourPricingData()
+    {
+        if (!$this->tourHour || !$this->tourDate) {
+            $this->tourPricingData = null;
+            return false;
+        }
+
+        $dayNumber = Carbon::parse($this->tourDate)->dayOfWeekIso - 1;
+        
+        $this->tourPricingData = collect($this->product->tour_information)
+                            ->where('hour', $this->tourHour)
+                            ->where('day', $dayNumber)
+                            ->first();
     }
 
     public function makeReservationEvent()
@@ -199,8 +265,8 @@ class HousingReservationForm extends Component
             $checkOutDate = $this->checkOutDate;
             $type = 'housing';
         } else if ($this->product->is_tour) {
-            $checkInDate = $this->product->tour_information['tour_date'];
-            $checkOutDate = $this->product->tour_information['tour_date'];
+            $checkInDate = "$this->tourDate $this->tourHour";
+            $checkOutDate = "$this->tourDate $this->tourHour";
             $type = 'tour';
         }
 
