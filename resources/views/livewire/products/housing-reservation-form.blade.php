@@ -35,7 +35,7 @@
                                     name="tourDate">
                             </div>
                             <div class="col-md-6">
-                                <label for="">Horarios disponibles {{ $tourHour }}</label>
+                                <label for="">Horarios disponibles</label>
                                 <select 
                                     class="form-control 
                                     @error('tourHour') is-invalid @enderror" 
@@ -103,7 +103,7 @@
                         </div>
                     @elseif ($step === 2)
                         <div class="row">
-                            <div class="col text-center"><h4>Solicitud de reserva creada exitosamente</h4></div>
+                            <div class="col text-center"><h4>Tu solicitud de reserva ha sido creada exitosamente</h4></div>
                         </div>
                         <div class="row">
                             <div class="col">
@@ -139,7 +139,8 @@
             });
 
             $('input[name=tourDate]').on('change', function (e) {
-                @this.set('tourDate', e.target.value);
+                var value = e.target.value
+                @this.set('tourDate', value);
                 @this.set('tourPricingData', null);
                 @this.set('tourHour', null);
                 Livewire.emit('housing:resetCalculation')

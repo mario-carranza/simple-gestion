@@ -66,7 +66,7 @@ class HousingReservationForm extends Component
         }
 
         if ($this->product->is_tour) {
-            $rules['tourDate'] = 'required|date';
+            $rules['tourDate'] = 'required|date_format:d/m/Y';
             $rules['tourHour'] = 'required|min:1';
         }
 
@@ -118,7 +118,7 @@ class HousingReservationForm extends Component
     {
         if (! $this->tourDate) return false;
 
-        $dayNumber = Carbon::parse($this->tourDate)->dayOfWeekIso - 1;
+        $dayNumber = Carbon::createFromFormat('d/m/Y', $this->tourDate)->dayOfWeekIso - 1;
 
         $this->availableHours = collect($this->product->tour_information)
                             ->where('day', $dayNumber)
@@ -240,7 +240,7 @@ class HousingReservationForm extends Component
             return false;
         }
 
-        $dayNumber = Carbon::parse($this->tourDate)->dayOfWeekIso - 1;
+        $dayNumber = Carbon::createFromFormat('d/m/Y', $this->tourDate)->dayOfWeekIso - 1;
         
         $this->tourPricingData = collect($this->product->tour_information)
                             ->where('hour', $this->tourHour)
@@ -266,8 +266,9 @@ class HousingReservationForm extends Component
             $checkOutDate = $this->checkOutDate;
             $type = 'housing';
         } else if ($this->product->is_tour) {
-            $checkInDate = "$this->tourDate $this->tourHour";
-            $checkOutDate = "$this->tourDate $this->tourHour";
+            $tourDate = Carbon::createFromFormat('d/m/Y', $this->tourDate);
+            $checkInDate = $tourDate->format('Y-m-d')  . ' ' . $this->tourHour;
+            $checkOutDate = $tourDate->format('Y-m-d')  . ' ' . $this->tourHour;
             $type = 'tour';
         }
 
