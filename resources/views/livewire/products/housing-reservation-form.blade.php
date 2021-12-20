@@ -127,13 +127,15 @@
 
 @push('scripts')
 <script src="{{ asset('packages/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ asset('packages/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js') }}"></script>
 <script>
     $(document).ready(function () {
         @if ($product->is_tour)
             const disabledDays = ('{!! json_encode($disabledDays) !!}')
-            console.log(disabledDays)
+
             $('input[name=tourDate]').datepicker({
                 daysOfWeekDisabled: disabledDays,
+                language: 'es-ES',
             });
 
             $('input[name=tourDate]').on('change', function (e) {

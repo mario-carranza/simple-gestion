@@ -113,7 +113,7 @@
                         @if ($product->is_tour)
                             <div class="mb-4">
                                 <h4>Horarios disponibles</h4>
-                                @foreach ($product->tour_information as $item)
+                                @foreach (collect($product->tour_information)->sortBy('day') as $item)
                                     <small>Todos los {{ $dayNames[$item['day']] }} las {{ Carbon\Carbon::parse($item['hour'])->format('h:i a') }}</small><br>
                                 @endforeach
                             </div>

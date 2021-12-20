@@ -115,9 +115,26 @@ class ProductUpdateRequest extends FormRequest
         }
 
         if ($product->is_tour ?? false) {
-            /* $rules['tour_date'] = ['required'];
-            $rules['adults_price'] = ['required'];
-            $rules['childrens_price'] = ['required']; */
+            $rules['tour_information'] = function ($attribute, $value, $fail) {
+                $value = collect(json_decode($value));
+
+                $attributes = [
+                    'day' => 'Día', 
+                    'adults_price' => 'Precio por adulto', 
+                    'childrens_price' =>  'Precio por niño', 
+                    'hour' => 'Hora de inicio',
+                ];
+
+                foreach ($attributes as $attribute => $text) {
+                    $invalid = $value->pluck($attribute)->filter(function ($item) {
+                        return $item === '';
+                    });
+    
+                    if ($invalid->count()) {
+                        return $fail("El campo de $text es requerido");
+                    }
+                }
+            };
         }
 
         return $rules;
