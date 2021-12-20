@@ -230,7 +230,7 @@ class ProductReservationCrudController extends CrudController
         if ($reservation->type === 'tour') {
             CRUD::addField([
                 'name' => 'check_in_date',
-                'label' => 'Fecha del Tour',
+                'label' => 'Fecha de la experiencia',
                 'type' => 'datetime',
                 'wrapper' => ['class' => 'form-group col-md-6'],
                 'attributes' => ['readonly' => true],
@@ -485,7 +485,7 @@ class ProductReservationCrudController extends CrudController
             ]);
         } elseif ($product->is_tour) {
             $data['product_attributes'] = json_encode([
-                ['Fecha y hora' => Carbon::parse($product->tour_information['tour_date'])->format('d/m/Y h:i a ')],
+                ['Fecha y hora' => Carbon::parse($productReservation->check_in_date)->format('d/m/Y h:i a ')],
                 ['Numero de adultos' => $productReservation->adults_number],
                 ['Numero de niños' => $productReservation->childrens_number],
             ]);
