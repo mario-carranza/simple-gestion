@@ -45,7 +45,7 @@ class ProductUpdateRequest extends FormRequest
                     return $query->where('seller_id', '=', request('seller_id'))->where('id', '!=', request('id'));
                 }),
             ],
-            'short_description' => 'required|min:5:max:150',
+            'description' => 'required',
             'url_key' => [
                 'required',
                 Rule::unique('products')->where( function($query) {
@@ -109,6 +109,10 @@ class ProductUpdateRequest extends FormRequest
                 foreach ($value as $dayPricing) {
                     if ($dayPricing->price_per_night == '') {
                         return $fail('El campo de precio por noche es requerido');
+                    }
+
+                    if (!is_numeric($dayPricing->price_per_night)) {
+                        return $fail('El campo de precio por noche debe ser un numero entero');
                     }
                 }
             };
