@@ -6471,16 +6471,16 @@
         },
         {
             "name": "transbank/transbank-sdk",
-            "version": "1.8.2",
+            "version": "1.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/TransbankDevelopers/transbank-sdk-php.git",
-                "reference": "a72b335b3b8223e448929261f63ff7955d61bdfb"
+                "reference": "60b711d215f32494bd85b4b4085310a6951ca038"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/TransbankDevelopers/transbank-sdk-php/zipball/a72b335b3b8223e448929261f63ff7955d61bdfb",
-                "reference": "a72b335b3b8223e448929261f63ff7955d61bdfb",
+                "url": "https://api.github.com/repos/TransbankDevelopers/transbank-sdk-php/zipball/60b711d215f32494bd85b4b4085310a6951ca038",
+                "reference": "60b711d215f32494bd85b4b4085310a6951ca038",
                 "shasum": ""
             },
             "require": {
@@ -6499,80 +6499,9 @@
             },
             "type": "library",
             "autoload": {
-                "files": [
-                    "lib/webpay_rest/oneclick/Oneclick.php",
-                    "lib/patpass/patpass_comercio/PatpassComercio.php",
-                    "lib/transaccion_completa/TransaccionCompleta.php"
-                ],
                 "psr-4": {
                     "Transbank\\": [
-                        "lib/"
-                    ],
-                    "Transbank\\Onepay\\": [
-                        "lib/onepay",
-                        "lib/onepay/utils"
-                    ],
-                    "Transbank\\Onepay\\Exceptions\\": [
-                        "lib/onepay/exceptions"
-                    ],
-                    "Transbank\\Webpay\\": [
-                        "lib/webpay",
-                        "lib/webpay/soap",
-                        "lib/webpay_rest",
-                        "lib/webpay_rest/webpay_plus"
-                    ],
-                    "Transbank\\Webpay\\Exceptions\\": [
-                        "lib/webpay_rest/exceptions"
-                    ],
-                    "Transbank\\Webpay\\WebpayPlus\\": [
-                        "lib/webpay_rest/webpay_plus"
-                    ],
-                    "Transbank\\Webpay\\WebpayPlus\\Exceptions\\": [
-                        "lib/webpay_rest/webpay_plus/exceptions"
-                    ],
-                    "Transbank\\Webpay\\Oneclick\\": [
-                        "lib/webpay_rest/oneclick",
-                        "lib/webpay_rest/oneclick/inscription",
-                        "lib/webpay_rest/oneclick/mall"
-                    ],
-                    "Transbank\\Webpay\\Oneclick\\Exceptions\\": [
-                        "lib/webpay_rest/oneclick/exceptions",
-                        "lib/webpay_rest/oneclick/mall/exceptions"
-                    ],
-                    "Transbank\\Patpass\\": [
-                        "lib/patpass",
-                        "lib/patpass/patpass_by_webpay",
-                        "lib/patpass/patpass_comercio"
-                    ],
-                    "Transbank\\Patpass\\Exceptions\\": [
-                        "lib/patpass/exceptions"
-                    ],
-                    "Transbank\\Patpass\\PatpassByWebpay\\": [
-                        "lib/patpass/patpass_by_webpay"
-                    ],
-                    "Transbank\\Patpass\\PatpassComercio\\": [
-                        "lib/patpass/patpass_comercio",
-                        "lib/patpass/patpass_comercio/inscription"
-                    ],
-                    "Transbank\\Patpass\\PatpassComercio\\Exceptions\\": [
-                        "lib/patpass/patpass_comercio/exceptions"
-                    ],
-                    "Transbank\\Patpass\\PatpassByWebpay\\Exceptions\\": [
-                        "lib/patpass/patpass_by_webpay/exceptions"
-                    ],
-                    "Transbank\\TransaccionCompleta\\": [
-                        "lib/transaccion_completa",
-                        "lib/transaccion_completa/inscription",
-                        "lib/transaccion_completa/transaction",
-                        "lib/transaccion_completa/mall",
-                        "lib/transaccion_completa/mall/transaction"
-                    ],
-                    "Transbank\\TransaccionCompleta\\Exceptions\\": [
-                        "lib/transaccion_completa/exceptions",
-                        "lib/transaccion_completa/mall/exceptions"
-                    ],
-                    "Transbank\\Utils\\": [
-                        "lib/utils"
+                        "src/"
                     ]
                 }
             },
@@ -6587,7 +6516,11 @@
                 "sdk",
                 "transbank"
             ],
-            "time": "2020-11-24T01:25:40+00:00"
+            "support": {
+                "issues": "https://github.com/TransbankDevelopers/transbank-sdk-php/issues",
+                "source": "https://github.com/TransbankDevelopers/transbank-sdk-php/tree/1.10.2"
+            },
+            "time": "2021-08-25T18:58:07+00:00"
         },
         {
             "name": "tymon/jwt-auth",
@@ -9160,5 +9093,5 @@
         "php": "^7.2.5"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }
