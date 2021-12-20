@@ -11,6 +11,7 @@ use App\Models\ProductReservations;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ProductReservationCreated;
+use Backpack\Settings\app\Models\Setting;
 
 class HousingReservationForm extends Component
 {
@@ -289,7 +290,16 @@ class HousingReservationForm extends Component
 
         try {
             Mail::to($this->product->seller->email)->send(new ProductReservationCreated($productReservation, 'seller'));
+            
             Mail::to($this->email)->send(new ProductReservationCreated($productReservation, 'customer'));
+            
+            $administrators = Setting::get('administrator_email');
+            
+            $recipients = explode(';', $administrators);
+            
+            foreach ($recipients as $key => $recipient) {
+                Mail::to($recipient)->send(new ProductReservationCreated($productReservation, 'admin'));
+            }
         } catch (\Throwable $th) {
             Log::error('No se puedo enviar el correo', [
                 'error' => $th->getMessage(),

@@ -12,6 +12,7 @@ use App\Models\ProductReservation;
 use Prologue\Alerts\Facades\Alert;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Backpack\Settings\app\Models\Setting;
 use App\Mail\ProductReservationChangeStatus;
 use App\Http\Requests\ProductReservationRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -420,8 +421,15 @@ class ProductReservationCrudController extends CrudController
             || $reservation->reservation_status === ProductReservation::REJECTED_STATUS
         ) {
             try {
-                Mail::to($reservation->email)
-                    ->send(new ProductReservationChangeStatus($reservation, 'customer', $reservation->reservation_status));
+                Mail::to($reservation->email)->send(new ProductReservationChangeStatus($reservation, 'customer', $reservation->reservation_status));
+            
+                $administrators = Setting::get('administrator_email');
+                
+                $recipients = explode(';', $administrators);
+                
+                foreach ($recipients as $key => $recipient) {
+                    Mail::to($recipient)->send(new ProductReservationChangeStatus($reservation, 'admin', $reservation->reservation_status));
+                }
             } catch (\Throwable $th) {
                 Log::error('No se puedo enviar el correo', [
                     'error' => $th->getMessage(),
