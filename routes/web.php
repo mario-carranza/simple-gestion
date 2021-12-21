@@ -101,7 +101,8 @@ Route::group([
 
     // WebPayPlus Mall
     Route::get('webpay/mall/{order}', 'Payments\Transbank\WebpayPlusMallController@redirect')->name('transbank.webpayplus.mall.redirect');
-    Route::post('webpay/mall/response', 'Payments\Transbank\WebpayPlusMallController@response')->name('transbank.webpayplus.mall.response');
+    Route::get('webpay/mall/order/response', 'Payments\Transbank\WebpayPlusMallController@response')->name('transbank.webpayplus.mall.response');
+    Route::post('webpay/mall/order/response', 'Payments\Transbank\WebpayPlusMallController@response')->name('transbank.webpayplus.mall.response');
     Route::post('final', 'Payments\Transbank\WebpayPlusMallController@final')->name('transbank.final');
     Route::get('webpay/mall/download/{order}', 'Payments\Transbank\WebpayPlusMallController@download')->name('transbank.webpayplus.mall.download');
     Route::get('test/{order}', 'Payments\Transbank\WebpayPlusMallController@test')->name('transbank.test.view');
