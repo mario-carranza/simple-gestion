@@ -47,7 +47,6 @@ class WebpayPlusMallController extends Controller
 
     public function redirect($orderId)
     {
-
         if (!intval($orderId)) {
             return redirect()->back()->with('error', 'Orden no generada , reintente');
         }
@@ -87,7 +86,6 @@ class WebpayPlusMallController extends Controller
             $totalsBySeller[$key]['status'] = $pmSeller->status;
 
             foreach ($order->order_items as $item) {
-
                 $product = Product::find($item->product_id);
                 if ($seller->id === $product->seller->id) {
                     $totalsBySeller[$key]['amount'] += ($item->price * $item->qty) + ($item->shipping_total);
@@ -113,7 +111,6 @@ class WebpayPlusMallController extends Controller
         try {
             $response = $this->service->createTransaction($buyOrder, $sessionId, $transactions);
         } catch (Exception $e) {
-            
             $data = [
                 'event' => 'init transaction',
                 'data' => $e->getMessage(),
@@ -182,9 +179,11 @@ class WebpayPlusMallController extends Controller
             $result = $this->service->getTokenResult(request()->input('token_ws'));
         } catch (Exception $e) {
             Log::error('Error obteniendo resultado del token', ['error' => $e->getMessage(), 'stacktrace' => $e->getTraceAsString()]);
+            
             $order = Order::where('id', $request->TBK_ORDEN_COMPRA)->first();
             $order->status = Order::STATUS_REJECT;
             $order->update();
+            
             return view('payments.transbank.webpay.mall.failed', compact('order'));
         }
 
@@ -215,7 +214,6 @@ class WebpayPlusMallController extends Controller
         $orderlog->json_value =  json_encode($data);
         $orderlog->save();
 
-
         $finalresult = false;
 
         if (is_array($result['details'])) {
@@ -241,16 +239,14 @@ class WebpayPlusMallController extends Controller
         }
 
         if ($finalresult) {
-
-             //Update order status
-             $order = Order::where('id', $this->orderId)->first();
-             $order->status = 2; //paid
-             $order->update();
+            //Update order status
+            $order = Order::where('id', $this->orderId)->first();
+            $order->status = 2; //paid
+            $order->update();
 
             $orderItems = $order->order_items;
 
-            foreach($orderItems as $orderItem) {
-
+            foreach ($orderItems as $orderItem) {
                 if ($orderItem->product_reservation) {
                     $orderItem->product_reservation->reservation_status = ProductReservation::PAYED_STATUS;
                     $orderItem->product_reservation->order_id = $order->id;
@@ -259,7 +255,7 @@ class WebpayPlusMallController extends Controller
 
                 // Reducir invententario de product
                 // Por cada item
-                if($orderItem->product->use_inventory_control) {
+                if ($orderItem->product->use_inventory_control) {
                     // 1. obtener cantidad en stock (cual bodega)
                     $qtyInStock = $orderItem->product->inventories->first()->pivot->qty;
                     $inventorySourceId = $orderItem->product->inventories->first()->id;
@@ -301,10 +297,10 @@ class WebpayPlusMallController extends Controller
 
             return view('payments.transbank.webpay.mall.complete', compact('result', 'order'));
         } else {
-             //Update order status
-             $order = Order::where('id', $this->orderId)->first();
-             $order->status = 4; // Reject
-             $order->update();
+            //Update order status
+            $order = Order::where('id', $this->orderId)->first();
+            $order->status = 4; // Reject
+            $order->update();
             return view('payments.transbank.webpay.mall.failed', compact('result', 'order'));
         }
     }
@@ -335,7 +331,8 @@ class WebpayPlusMallController extends Controller
         return view('payments.transbank.webpay.mall.complete', compact('result', 'order'));
     }
 
-    function final () {
+    public function final()
+    {
         $sessionId = request()->input("TBK_ID_SESION");
         session()->setId($sessionId);
         session()->start();
