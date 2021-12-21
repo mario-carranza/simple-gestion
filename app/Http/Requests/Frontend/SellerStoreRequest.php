@@ -46,6 +46,7 @@ class SellerStoreRequest extends FormRequest
             'legal_representative_name' => 'required',
             'custom_1' => 'required',
             'custom_2' => 'required',
+            'is_turismo_rural' => 'required',
         ];
     }
 

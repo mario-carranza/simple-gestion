@@ -12,7 +12,7 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item"><b>Servicio</b>: {{ $productReservation->product->name }}</li>
                     @if ($productReservation->type === 'tour')
-                    <li class="list-group-item"><b>Fecha del Tour</b>: {{ $productReservation->check_in_date->format('d/m/Y') }}</li>
+                    <li class="list-group-item"><b>Fecha de la experiencia</b>: {{ $productReservation->check_in_date->format('d/m/Y') }}</li>
                     @else
                     <li class="list-group-item"><b>Fecha de Check In</b>: {{ $productReservation->check_in_date->format('d/m/Y') }}</li>
                     @endif

@@ -131,7 +131,7 @@
         @endcan
 
         @can('productreservation.list')
-        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('productreservation') }}'><i class='nav-icon la la-map-marked'></i> Reservaciones</a></li>
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('productreservation') }}'><i class='nav-icon la la-map-marked'></i> Reservación</a></li>
         @endcan
         </ul>
 </li>

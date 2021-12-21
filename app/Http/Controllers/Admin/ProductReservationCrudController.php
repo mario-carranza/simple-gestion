@@ -12,6 +12,7 @@ use App\Models\ProductReservation;
 use Prologue\Alerts\Facades\Alert;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Backpack\Settings\app\Models\Setting;
 use App\Mail\ProductReservationChangeStatus;
 use App\Http\Requests\ProductReservationRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -230,7 +231,7 @@ class ProductReservationCrudController extends CrudController
         if ($reservation->type === 'tour') {
             CRUD::addField([
                 'name' => 'check_in_date',
-                'label' => 'Fecha del Tour',
+                'label' => 'Fecha de la experiencia',
                 'type' => 'datetime',
                 'wrapper' => ['class' => 'form-group col-md-6'],
                 'attributes' => ['readonly' => true],
@@ -420,8 +421,15 @@ class ProductReservationCrudController extends CrudController
             || $reservation->reservation_status === ProductReservation::REJECTED_STATUS
         ) {
             try {
-                Mail::to($reservation->email)
-                    ->send(new ProductReservationChangeStatus($reservation, 'customer', $reservation->reservation_status));
+                Mail::to($reservation->email)->send(new ProductReservationChangeStatus($reservation, 'customer', $reservation->reservation_status));
+            
+                $administrators = Setting::get('administrator_email');
+                
+                $recipients = explode(';', $administrators);
+                
+                foreach ($recipients as $key => $recipient) {
+                    Mail::to($recipient)->send(new ProductReservationChangeStatus($reservation, 'admin', $reservation->reservation_status));
+                }
             } catch (\Throwable $th) {
                 Log::error('No se puedo enviar el correo', [
                     'error' => $th->getMessage(),
@@ -485,7 +493,7 @@ class ProductReservationCrudController extends CrudController
             ]);
         } elseif ($product->is_tour) {
             $data['product_attributes'] = json_encode([
-                ['Fecha y hora' => Carbon::parse($product->tour_information['tour_date'])->format('d/m/Y h:i a ')],
+                ['Fecha y hora' => Carbon::parse($productReservation->check_in_date)->format('d/m/Y h:i a ')],
                 ['Numero de adultos' => $productReservation->adults_number],
                 ['Numero de niños' => $productReservation->childrens_number],
             ]);

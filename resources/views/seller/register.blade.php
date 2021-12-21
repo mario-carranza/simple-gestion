@@ -208,6 +208,22 @@ $selected_commune = "";
                                 @enderror
                             </div>
                             <div class="col-sm-6 form-group">
+                                <label for="custom_1">¿Tienes una oferta, producto, experiencia o servicio relacionado con el turismo rural en la región de Valparaíso? <span class='text-danger'>*</span></label><br>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input class="custom-control-input" type="radio" id="is_turismo_rural_yes" value="1" name="is_turismo_rural" {{ (old('is_turismo_rural') == 1) ? 'checked' : '' }}>
+                                    <label class="custom-control-label" for="is_turismo_rural_yes">Sí</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input class="custom-control-input" type="radio" id="is_turismo_rural_no" value="0" name="is_turismo_rural" {{ (old('is_turismo_rural') == 0) ? 'checked' : ((old('is_turismo_rural') == 1) ? '' : 'checked') }}>
+                                    <label class="custom-control-label" for="is_turismo_rural_no">No</label>
+                                </div>
+                                @error('custom_1')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="col-sm-6 form-group">
                                 <label for="custom_2">¿Qué despacho utilizas hoy? <span class='text-danger'>*</span></label>
                                 <input class="form-control @error('custom_2') is-invalid @enderror" type="text" value="{{ old('custom_2') }}" id="custom_2" name="custom_2">
                                 @error('custom_2')
