@@ -99,7 +99,7 @@ $communeInvoice = Commune::where('id', $addressInvoice->address_commune_id)->fir
                                 <div class="woocommerce-order-overview__payment-method method col-sm-6 mb-3 px-2">
                                     <div class="bg-secondary rounded-lg p-3 text-center font-size-md">
                                         Fecha de pago : <span
-                                            class="font-weight-medium">{{ $transactionData->transactionDate }}</span>
+                                            class="font-weight-medium">{{ $transactionData->transaction_date }}</span>
                                     </div>
                                 </div>
                             @endif
@@ -107,7 +107,7 @@ $communeInvoice = Commune::where('id', $addressInvoice->address_commune_id)->fir
                                 <div class="woocommerce-order-overview__payment-method method col-sm-6 mb-3 px-2">
                                     <div class="bg-secondary rounded-lg p-3 text-center font-size-md">
                                         Tarjeta bancaria : <span
-                                            class="font-weight-medium">xxxx-xxxx-xxxx-{{ $transactionData->cardDetail->cardNumber }}</span>
+                                            class="font-weight-medium">xxxx-xxxx-xxxx-{{ $transactionData->card_detail->card_number }}</span>
                                     </div>
                                 </div>
                             @endif
