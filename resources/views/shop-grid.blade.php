@@ -17,6 +17,9 @@
         <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
             <h1 class="h3 text-light mb-0">Búsqueda de productos</h1>
         </div>
+        @if (isset($data['category']) && $data['category'] != 0)
+        <x-category-breadcrumbs :categoryId="$data['category']"></x-category-bradcrumbs>
+        @endif
     </div>
 </div>
 <!-- Page Content-->
