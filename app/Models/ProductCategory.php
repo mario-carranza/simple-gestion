@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use App\Scopes\CompanyBranchScope;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\CustomAttributeRelations;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
-use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class ProductCategory extends Model
@@ -46,6 +47,44 @@ class ProductCategory extends Model
         parent::boot();
 
         static::addGlobalScope(new CompanyBranchScope);
+    }
+
+    /**
+     * Get all the childrens categories IDs
+     */
+    public function getChildrensId($array = [])
+    {
+        if (!$this->children->count()) {
+            return [];
+        }
+
+        $array = $this->children->pluck('id')->toArray();
+
+        foreach ($this->children as $children) {
+            $aux = $children->getChildrensId();
+            $array = array_merge($array, $aux);
+        }
+
+        return $array;
+    }
+
+    /**
+     * Get the qty of products that belongs to a category, including products that belongs to children
+     * categories
+     * 
+     * @param bool $excludeSelf Exclude the parent category products from the count
+     * @return int
+     */
+    public function getProductCount(bool $excludeSelf = false)
+    {
+        $ids = $this->getChildrensId();
+        if (!$excludeSelf) {
+            $ids[] = $this->id;
+        }
+        $result = DB::table('product_category_mapping')->whereIn('product_category_id', $ids)->get();
+        $result = $result->unique('product_id');
+
+        return $result->count();
     }
 
     /*

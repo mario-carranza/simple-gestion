@@ -139,8 +139,10 @@ class CardGeneral extends Component
             })
             ->when($category_id, function ($query) use ($category_id) {
                 if ($category_id != 0) {
-                    return $query->whereHas('categories', function ($q) use ($category_id) {
-                        $q->where('id', '=', $category_id);
+                    $category = ProductCategory::find($category_id);
+                    $categories = array_merge([$category_id], $category->getChildrensId());
+                    return $query->whereHas('categories', function ($q) use ($categories) {
+                        $q->whereIn('id', $categories);
                     });
                 }
                 return $query;
