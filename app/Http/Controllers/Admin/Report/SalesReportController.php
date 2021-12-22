@@ -110,6 +110,26 @@ class SalesReportController extends BaseController
                     $tmpOrderPayment = json_decode($tmpOrderPayment);
 
                     if (!is_null($tmpOrderPayment->data)) {
+
+
+                        // Como el formato de la respuesta de Transbank cambio, se debe
+                        // transformar la nueva respuesta para que coincida con las que
+                        // estan guardadas en ordenes anteriores
+
+                        if (!isset($tmpOrderPayment->data->detailOutput)) {
+                            $tmpOrderPayment->data = (object) [
+                                'buyOrder' => $tmpOrderPayment->data->buy_order,
+                                'cardDetail' => $tmpOrderPayment->data->card_detail,
+                                'detailOutput' => (object) [
+                                    'paymentTypeCode' => $tmpOrderPayment->data->details[0]->payment_type_code
+                                ],
+                                'sessionId' => $tmpOrderPayment->data->session_id,
+                                'transactionDate' => $tmpOrderPayment->data->transaction_date,
+                                'VCI' => $tmpOrderPayment->data->details[0]->payment_type_code,
+                                'urlRedirection' => '',
+                            ];
+                        }
+
                         if (!is_null($tmpOrderPayment->data->detailOutput)) {
 
                             if (isset($tmpOrderPayment->data->detailOutput->paymentTypeCode)) {
