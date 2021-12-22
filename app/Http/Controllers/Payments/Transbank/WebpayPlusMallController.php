@@ -81,22 +81,18 @@ class WebpayPlusMallController extends Controller
         $sellers = Seller::whereIn('id', $sellers_id)->select('id', 'name')->get();
 
         // Group by items by businness
-
         $totalsByBusiness = [];
 
         foreach ($sellers as $key => $seller) {
-            //TODO find payment method by id
-            $pmSeller = PaymentMethodSeller::where('payment_method_id', $this->paymentMethod->id)->where('seller_id', $seller->id)->first();
-
             $totalsBySeller[$key] = array();
+            
             $totalsBySeller[$key]['id'] = $seller->id;
-            // $totalsBySeller[$key]['storeCode'] = $pmSeller->key;
+
             $totalsBySeller[$key]['amount'] = 0;
-            //$totalsBySeller[$key]['status'] = $pmSeller->status;
 
             foreach ($order->order_items as $item) {
-
                 $product = Product::find($item->product_id);
+
                 if ($seller->id === $product->seller->id) {
                     $totalsBySeller[$key]['amount'] += ($item->price * $item->qty) + ($item->shipping_total);
                 }
@@ -108,13 +104,6 @@ class WebpayPlusMallController extends Controller
 
         //Add transactions
         foreach ($totalsBySeller as $key => $seller) {
-
-            // Add transaction
-            // $transactions[] = array(
-            //     "storeCode" => $seller['storeCode'],
-            //     "amount" => $seller['amount'],
-            //     "buyOrder" => $buyOrder . 't' . ($key + 1),
-            // );
             $amountTotal += $seller['amount'];
         }
 
@@ -210,7 +199,6 @@ class WebpayPlusMallController extends Controller
             return view('payments.transbank.webpay.mall.failed', compact('order'));
         }
 
-
         $sessionId = $result['session_id'];
 
         session()->setId($sessionId);
@@ -255,7 +243,6 @@ class WebpayPlusMallController extends Controller
                 }
             }
         } else {
-
             if ($result['details']['response_code'] == 0) {
                 // Transaccion exitosa, puedes procesar el resultado
                 // con el contenido de las variables result y output.
@@ -293,17 +280,19 @@ class WebpayPlusMallController extends Controller
                 $cart->cart_items()->delete();
                 $cart->delete();
             }
+
             // $order = Order::where('id', $orderId)->first();
             $sellers = $order->getSellers();
+            
             //Order to customer
             $datacustomer = [
                 'email' => $order->email,
             ];
+            
             try {
                 Mail::to($order->email)->send(new OrderUpdated($order, 1, null));
                 //Create log event
                 $this->orderLoggerService->registerLog($order, 'Customer Email Sent', $datacustomer);
-
             } catch (Exception $ex) {
                 $datacustomer['error'] = $ex->getMessage();
 
@@ -352,7 +341,6 @@ class WebpayPlusMallController extends Controller
 
             //Verifico que no existan error en el envio de mails
             if (count(Mail::failures()) > 0) {
-
                 $order->email_sent = false;
                 $order->update();
             } else {
@@ -397,7 +385,8 @@ class WebpayPlusMallController extends Controller
         return view('payments.transbank.webpay.mall.complete', compact('result', 'order'));
     }
 
-    function final () {
+    public function final()
+    {
         $sessionId = request()->input("TBK_ID_SESION");
         session()->setId($sessionId);
         session()->start();
