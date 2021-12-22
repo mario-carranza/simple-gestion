@@ -172,6 +172,10 @@ class WebpayPlusMallController extends Controller
             $order = Order::where('id', $request->TBK_ORDEN_COMPRA)->first();
             $order->status = Order::STATUS_REJECT;
             $order->update();
+
+            session()->setId($request->TBK_ID_SESION);
+            session()->start();
+
             return view('payments.transbank.webpay.mall.failed', compact('order'));
         }
 
@@ -183,6 +187,9 @@ class WebpayPlusMallController extends Controller
             $order = Order::where('id', $request->TBK_ORDEN_COMPRA)->first();
             $order->status = Order::STATUS_REJECT;
             $order->update();
+
+            session()->setId($request->TBK_ID_SESION);
+            session()->start();
             
             return view('payments.transbank.webpay.mall.failed', compact('order'));
         }
