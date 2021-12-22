@@ -12,6 +12,8 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use App\Http\Requests\{ InvoiceRequest, DteSalesReport };
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Models\{Tax, Invoice, InvoiceType, CustomerAddress, Seller, Company};
+use Carbon\Carbon;
+
 /**
  * Class InvoiceCrudController
  * @package App\Http\Controllers\Admin
@@ -200,6 +202,14 @@ class InvoiceCrudController extends CrudController
         ]);
 
         CRUD::addColumn([
+            'label' => 'Fecha de vencimiento',
+            'name' => 'expiry_date',
+            'type' => 'date',
+            'format' => 'L',
+            'priority' => 3,
+        ]);
+
+        CRUD::addColumn([
             'name' => 'total',
             'label' => 'Total',
             'priority' => 1,
@@ -333,6 +343,7 @@ class InvoiceCrudController extends CrudController
             'label' => 'Fecha vencimiento',
             'name' => 'expiry_date',
             'type' => 'date',
+            'default' => Carbon::now()->addMonth(1)->format('Y-m-d'),
             'wrapper' => [
                 'class' => 'form-group col-md-3',
             ],
