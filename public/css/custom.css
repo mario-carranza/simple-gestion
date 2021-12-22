@@ -13,3 +13,23 @@
         object-fit: contain;
     }
 }
+
+.cat-mobil {
+    display: none;
+}
+
+@media (max-width: 990px) {
+    .cat-mobil {
+        display: block;
+    }
+}
+
+.cat-desktop {
+    display: flex;
+}
+
+@media (max-width: 990px) {
+    .cat-desktop {
+        display: none;
+    }
+}
