@@ -35,8 +35,8 @@ class WebpayPlusMallService {
         } else if ($enviromentSetting === 'PRODUCCION') {
 
             $this->enviromentEndpoint = self::PRODUCTION_ENDPOINT;
-            $this->apiKeySecret = $configuration['api_key_secret'];
-            $this->commerceCode = $configuration['commerce_code'];
+            $this->apiKeySecret = $configuration->api_key_secret;
+            $this->commerceCode = $configuration->commerce_code;
             
         } else {
             throw new Exception('El valor de configuración establecido para el ambiente de WebpayPlus no es valido.');
