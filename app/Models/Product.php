@@ -32,8 +32,8 @@ class Product extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
-    protected $fakeColumns = ['inventories_json', 'tour_information'];
-    
+    protected $fakeColumns = ['inventories_json'];
+
     protected $casts = [
         'images_json' => 'array',
         'variations_json' => 'array',
@@ -488,6 +488,11 @@ class Product extends Model
         return $this->categories()->first()->name;
     }
 
+    public function showSubCategories()
+    {
+        return $this->categories()->first()->children;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | HELPERS
@@ -520,14 +525,12 @@ class Product extends Model
 
     public function getHousingPriceRange() : array
     {
-        $minAdults = collect($this->housing_pricing)->pluck('adults_price')->min();
-        $maxAdults = collect($this->housing_pricing)->pluck('adults_price')->max();
-        $minChildrens = collect($this->housing_pricing)->pluck('childrens_price')->min();
-        $maxChildrens = collect($this->housing_pricing)->pluck('childrens_price')->max();
+        $min = collect($this->housing_pricing)->pluck('price_per_night')->min();
+        $max = collect($this->housing_pricing)->pluck('price_per_night')->max();
 
         return [
-            min($minAdults, $minChildrens),
-            max($maxChildrens, $maxAdults),
+            $min,
+            $max,
         ];
     }
 
@@ -648,7 +651,7 @@ class Product extends Model
                     WHEN (visible_to IS NOT NULL AND visible_from IS NULL) AND (visible_to >= CURDATE()) THEN 1
                     WHEN (visible_from IS NOT NULL AND visible_to IS NOT NULL) AND (visible_from <= CURDATE() AND  CURDATE() <= visible_to) THEN 1
                 ELSE 0
-                END)  
+                END)
                 AS should_show'
             )->having('should_show', '>=', 1);
     }

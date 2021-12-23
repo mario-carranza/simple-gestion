@@ -78,6 +78,7 @@ class Seller extends Model
         'company_id',
         'slug',
         'maximun_days_for_shipped',
+        'is_turismo_rural',
     ];
 
     protected $hidden = [

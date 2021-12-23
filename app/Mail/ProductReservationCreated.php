@@ -19,6 +19,7 @@ class ProductReservationCreated extends Mailable
     public $buttonText, $buttonLink;
     public $logo;
     public $receiver;
+    public $productReservation;
 
     /**
      * Create a new message instance.
@@ -28,6 +29,8 @@ class ProductReservationCreated extends Mailable
     public function __construct($productReservation, string $receiver)
     {
         $this->receiver = $receiver;
+
+        $this->productReservation = $productReservation;
 
         $this->logo = 'img/logo-pyme.png';
 
@@ -49,7 +52,32 @@ class ProductReservationCreated extends Mailable
             $this->text .= '<b>Teléfono:</b> ' . $productReservation->cellphone . '<br>';
 
             if ($productReservation->product->is_tour) {
-                $this->text .= '<b>Fecha del tour:</b> ' . Carbon::parse($productReservation->product->tour_information['tour_date'])->format('d/m/Y h:i a ') . '<br>';
+                $this->text .= '<b>Fecha de la experiencia:</b> ' . Carbon::parse($productReservation->check_in_date)->format('d/m/Y h:i a ') . '<br>';
+            }
+
+            if ($productReservation->product->is_housing) {
+                $this->text .= '<b>Fecha de Check In:</b> ' . $productReservation->check_in_date->format('d/m/Y') . '<br>';
+                $this->text .= '<b>Fecha de Check Out:</b> ' . $productReservation->check_out_date->format('d/m/Y') . '<br>';
+            }
+
+            $this->text .= '<b>Cantidad de adultos:</b> ' . $productReservation->adults_number . '<br>';
+            $this->text .= '<b>Cantidad de niños:</b> ' . $productReservation->childrens_number . '<br>';
+            $this->buttonText = null;
+            $this->buttonLink = null;
+        } else if ($receiver === 'admin') {
+            $this->title = $productReservation->product->seller->visible_name . ' ha recibido una solicitud de reserva';
+            $this->text = $productReservation->product->seller->visible_name . ' ha recibido una solicitud de reserva para <strong>' . $productReservation->product->name . '</strong>. Una vez que el vendedor apruebe o rechace  la solicitud, el cliente recibira un mensaje.';
+            $this->text .= '<br><br>';
+            $this->text .= '<b>Información de la reserva</b>';
+            $this->text .= '<br><br>';
+            $this->text .= '<b>Servicio:</b> ' . $productReservation->product->name . '<br>';
+            $this->text .= '<b>Precio:</b> ' . currencyFormat($productReservation->price, 'CLP', true) . '<br>';
+            $this->text .= '<b>Nombre:</b> ' . $productReservation->name . '<br>';
+            $this->text .= '<b>Correo:</b> ' . $productReservation->email . '<br>';
+            $this->text .= '<b>Teléfono:</b> ' . $productReservation->cellphone . '<br>';
+
+            if ($productReservation->product->is_tour) {
+                $this->text .= '<b>Fecha de la experiencia:</b> ' . Carbon::parse($productReservation->check_in_date)->format('d/m/Y h:i a ') . '<br>';
             }
 
             if ($productReservation->product->is_housing) {
@@ -77,6 +105,9 @@ class ProductReservationCreated extends Mailable
             return $this->subject('Tienes una nueva solicitud de reserva')->view('maileclipse::templates.basicEmailTemplate');
         } else if ($this->receiver === 'customer') {
             return $this->subject('Tu solicitud de reserva ha sido enviada')->view('maileclipse::templates.basicEmailTemplate');
+        } else if ($this->receiver == 'admin') {
+            return $this->subject($this->productReservation->product->seller->visible_name . ' ha recibido una solicitud de reserva')->view('maileclipse::templates.basicEmailTemplate');
+
         }
     }
 }

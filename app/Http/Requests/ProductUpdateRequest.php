@@ -45,7 +45,7 @@ class ProductUpdateRequest extends FormRequest
                     return $query->where('seller_id', '=', request('seller_id'))->where('id', '!=', request('id'));
                 }),
             ],
-            'short_description' => 'required|min:5:max:150',
+            'description' => 'required',
             'url_key' => [
                 'required',
                 Rule::unique('products')->where( function($query) {
@@ -107,17 +107,38 @@ class ProductUpdateRequest extends FormRequest
                 $value = json_decode($value);
 
                 foreach ($value as $dayPricing) {
-                    if ($dayPricing->childrens_price == '' || $dayPricing->adults_price == '') {
-                        return $fail('El campo de precio para adultos y niños es requerido');
+                    if ($dayPricing->price_per_night == '') {
+                        return $fail('El campo de precio por noche es requerido');
+                    }
+
+                    if (!is_numeric($dayPricing->price_per_night)) {
+                        return $fail('El campo de precio por noche debe ser un numero entero');
                     }
                 }
             };
         }
 
         if ($product->is_tour ?? false) {
-            $rules['tour_date'] = ['required'];
-            $rules['adults_price'] = ['required'];
-            $rules['childrens_price'] = ['required'];
+            $rules['tour_information'] = function ($attribute, $value, $fail) {
+                $value = collect(json_decode($value));
+
+                $attributes = [
+                    'day' => 'Día', 
+                    'adults_price' => 'Precio por adulto', 
+                    'childrens_price' =>  'Precio por niño', 
+                    'hour' => 'Hora de inicio',
+                ];
+
+                foreach ($attributes as $attribute => $text) {
+                    $invalid = $value->pluck($attribute)->filter(function ($item) {
+                        return $item === '';
+                    });
+    
+                    if ($invalid->count()) {
+                        return $fail("El campo de $text es requerido");
+                    }
+                }
+            };
         }
 
         return $rules;

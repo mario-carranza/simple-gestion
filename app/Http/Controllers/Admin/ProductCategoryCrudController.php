@@ -124,6 +124,16 @@ class ProductCategoryCrudController extends CrudController
         ]);
 
         CRUD::addField([
+            'name' => 'featured_image',
+            'type' => 'image',
+            'label' => 'Imagen destacada',
+            'tab' => 'General',
+            'wrapper' => [
+                'class' => 'form-group col-md-3',
+            ],
+        ]);
+
+        CRUD::addField([
             'name' => 'position',
             'label' => 'Posición',
             'type' => 'number',

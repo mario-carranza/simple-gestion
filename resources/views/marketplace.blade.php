@@ -203,11 +203,11 @@ $today =  Carbon::now();
                                     @endif
                                 </a>
                             </div>
-                            
+
                         </div>
-                        
+
                     </div>
-                    
+
                 @endforeach
             </div>
         </div>
@@ -220,10 +220,45 @@ $today =  Carbon::now();
         <h2 class="h3 mb-0 pt-3 mr-2">Productos</h2>
         <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{{ url('shop-grid') }}">Más productos<i class="czi-arrow-right ml-1 mr-n1"></i></a></div>
     </div>
-    <!-- Grid-->
-    <div class="pt-2 mx-n2">
-        <!-- Product-->
-        @livewire('products.card-general', ['columnLg' => 3, 'showPaginate' => false, 'paginateBy' => 8, 'showFrom' => '', 'data' => ''])
+    <div class="row">
+        @foreach($withSubCategories as $category)
+            <div class="col-lg-4">
+                <div class="row">
+                    <div class="col-md-6 mb-2 py-3">
+                        <div class="widget">
+                            <h3 class="widget-title">{{$category->name}}</h3>
+                                @foreach ($category->children as $subcategory)
+                                    <p><a href="{{ route('category.products', $subcategory->slug) }}">{{ $subcategory->name }}</a></p>
+                                @endforeach
+                            <a class="font-size-sm" href="{{ route('category.products', $category->slug) }}">Ver todo<i class="czi-arrow-right font-size-xs ml-1"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 py-3">
+                        <img src="{{ asset($category->featured_image) }}" alt="{{ $category->name }}" class="rounded">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                @livewire('products.products-general', [
+                    'idCategory' => $category->id,
+                    'view' => 'livewire.products.compact-grid',
+                    'limit' => 8,
+                ])
+            </div>
+
+            <hr class="w-100 my-5">
+        @endforeach
+
+        {{-- @livewire('products.products-general',['idCategory'=>$category->id]) --}}
+
+
+        {{-- <div class="col-lg-8">
+            <!-- Grid-->
+            <div class="pt-2 mx-n2">
+                <!-- Product-->
+                @livewire('products.card-general', ['columnLg' => 3, 'showPaginate' => false, 'paginateBy' => 8, 'showFrom' => '', 'data' => '', 'renderIn' => 'shop-grid'])
+            </div>
+        </div> --}}
     </div>
 </section>
 

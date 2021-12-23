@@ -22,6 +22,36 @@
                                 </div>
                             </div>
                         @endif
+
+                        @if ($product->is_tour)
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="">Fecha</label>
+                                <input 
+                                    type="text" 
+                                    class="form-control 
+                                    @error('tourDate') is-invalid @enderror" 
+                                    wire:model="tourDate" 
+                                    name="tourDate">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Horarios disponibles</label>
+                                <select 
+                                    class="form-control 
+                                    @error('tourHour') is-invalid @enderror" 
+                                    wire:model="tourHour" 
+                                    wire:change="resetCalculation" 
+                                    name="tourHour"
+                                    {{ empty($availableHours) ? 'disabled' : '' }}
+                                >
+                                <option value="" selected>Selecciona un horario</option>
+                                    @foreach ($availableHours as  $hour => $text)
+                                        <option value="{{ $hour }}">{{ $text }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        @endif
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label for="">Nombre completo</label>
@@ -49,6 +79,18 @@
                                 <button wire:click="calculatePrice" class="btn btn-info btn-block" style="margin-top: 29px">{{ $priceLabel }}</button>
                             </div>
                         </div>
+
+                        @if (!empty($tourPricingData))
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p>Precio por adulto: {{ currencyFormat($tourPricingData['adults_price'], 'CLP', true) }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p>Precio por niño: {{ currencyFormat($tourPricingData['childrens_price'], 'CLP', true) }}</p>
+                            </div>
+                        </div>
+                        @endif
+                        
                         <div class="row mb-3">
                             <div class="col">
                                 <textarea class="form-control" wire:model="comments" name="comments" placeholder="Comentarios..." rows="5"></textarea>
@@ -61,7 +103,7 @@
                         </div>
                     @elseif ($step === 2)
                         <div class="row">
-                            <div class="col text-center"><h4>Solicitud de reserva creada exitosamente</h4></div>
+                            <div class="col text-center"><h4>Tu solicitud de reserva ha sido creada exitosamente</h4></div>
                         </div>
                         <div class="row">
                             <div class="col">
@@ -78,3 +120,34 @@
         </div>
     </div>
 </div>
+
+@push('styles')
+<link rel="stylesheet" href="{{ asset('packages/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
+@endpush
+
+@push('scripts')
+<script src="{{ asset('packages/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ asset('packages/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js') }}"></script>
+<script>
+    $(document).ready(function () {
+        @if ($product->is_tour)
+            const disabledDays = ('{!! json_encode($disabledDays) !!}')
+
+            $('input[name=tourDate]').datepicker({
+                daysOfWeekDisabled: disabledDays,
+                language: 'es-ES',
+            });
+
+            $('input[name=tourDate]').on('change', function (e) {
+                var value = e.target.value
+                @this.set('tourDate', value);
+                @this.set('tourPricingData', null);
+                @this.set('tourHour', null);
+                Livewire.emit('housing:resetCalculation')
+                Livewire.emit('housing:calculateHours')
+            });
+        @endif
+        
+    })    
+</script>  
+@endpush

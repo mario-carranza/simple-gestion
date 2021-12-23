@@ -118,6 +118,12 @@ class SellerCrudController extends CrudController
         ]);
 
         CRUD::addColumn([
+            'name' => 'is_turismo_rural',
+            'type' => 'check',
+            'label' => 'Turismo Rural',
+        ]);
+
+        CRUD::addColumn([
             'name' => 'approved_description',
             'type' => 'text',
             'label' => 'Aprobado',
@@ -832,6 +838,22 @@ class SellerCrudController extends CrudController
                 ],
             ]);
 
+            CRUD::addField([
+                'name' => 'is_turismo_rural',
+                'label' => 'Turismo Rural',
+                'type' => 'radio',
+                'options' => [
+                    1 => 'Sí',
+                    0 => 'No',
+                ],
+                'default' => 0,
+                'inline' => true,
+                'tab' => 'Administrador',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6',
+                ],
+            ]);
+
 
             if ( $this->crud->getCurrentEntry() && !$this->crud->getCurrentEntry()->subscription_data) {
                 CRUD::addField([
@@ -1059,5 +1081,16 @@ class SellerCrudController extends CrudController
         }, function ($values) {
             $this->crud->addClause('where', 'seller_category_id', 'LIKE', '%' . $values . '%');
         });
+
+        CRUD::addFilter([
+            'name'  => 'is_turismo',
+            'type'  => 'dropdown',
+            'label' => 'Pertenece a Turismo Rural'
+          ], [
+            1 => 'Si',
+            0 => 'No',
+          ], function($value) {
+            $this->crud->addClause('where', 'is_turismo_rural', $value);
+          });
     }
 }

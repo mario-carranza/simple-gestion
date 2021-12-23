@@ -1,3 +1,15 @@
+@php
+    $dayNames = [
+        0 => 'Lunes',
+        1 => 'Martes',
+        2 => 'Miercoles',
+        3 => 'Jueves',
+        4 => 'Viernes',
+        5 => 'Sabados',
+        6 => 'Domingos',
+    ]
+@endphp
+
 <div class="px-4 pt-lg-3 pb-3 mb-5">
     <div class="tab-content px-lg-3">
         <!-- General info tab-->
@@ -34,9 +46,9 @@
                     </div>
                     <div class="product-details ml-auto pb-3">
                         @if ($product->is_tour)
-                            <div class="h4 font-weight-normal text-accent mb-1 mr-1">Adultos: {{ currencyFormat($product->tour_information['adults_price'], 'CLP', true) }}</div>
+{{--                             <div class="h4 font-weight-normal text-accent mb-1 mr-1">Adultos: {{ currencyFormat($product->tour_information['adults_price'], 'CLP', true) }}</div>
                             <div class="h4 font-weight-normal text-accent mb-3 mr-1">Niños: {{ currencyFormat($product->tour_information['childrens_price'], 'CLP', true) }}</div> 
-                        @elseif($product->is_housing)
+ --}}                        @elseif($product->is_housing)
                             <div class="h4 font-weight-normal text-accent mb-3 mr-1">
                                 {{ currencyFormat($product->getHousingPriceRange()[0], 'CLP', true) }} - {{ currencyFormat($product->getHousingPriceRange()[1], 'CLP', true) }}
                             </div>
@@ -97,11 +109,13 @@
                             </div>
                         @endif
 
-                        
 
                         @if ($product->is_tour)
                             <div class="mb-4">
-                                <p>Fecha y hora de salida: {{ Carbon\Carbon::parse($product->tour_information['tour_date'])->format('d/m/Y h:i a ') }}</p>
+                                <h4>Horarios disponibles</h4>
+                                @foreach (collect($product->tour_information)->sortBy('day') as $item)
+                                    <small>Todos los {{ $dayNames[$item['day']] }} las {{ Carbon\Carbon::parse($item['hour'])->format('h:i a') }}</small><br>
+                                @endforeach
                             </div>
                         @endif
                         <p> Información sobre el vendedor </p>

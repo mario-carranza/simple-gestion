@@ -164,14 +164,14 @@ class ProductCrudController extends CrudController
 
         $entityNames = [
             'housing' => 'alojamiento',
-            'tour' => 'tour',
+            'tour' => 'experiencia',
         ];
 
         $entityName = $entityNames[request()->input('type')] ?? 'producto';
 
         CRUD::addField([
             'name' => 'name',
-            'label' => 'Nombre del ' . $entityName,
+            'label' => $createCrudType == 'tour' ? 'Nombre de la ' . $entityName : 'Nombre del ' . $entityName,
             'type' => 'text',
         ]);
 
@@ -802,8 +802,7 @@ class ProductCrudController extends CrudController
             'type' => 'product.table_with_types',
             'columns' => [
                 'day' => 'Dia',
-                'adults_price' => 'Precio por adulto',
-                'childrens_price' => 'Precio por niño',
+                'price_per_night' => 'Precio por noche',
             ],
             'column_types' => [
                 'day' => [
@@ -837,7 +836,7 @@ class ProductCrudController extends CrudController
 
     public function setTourFields()
     {
-        CRUD::addField([
+        /* CRUD::addField([
             'name' => 'tour_date',
             'label' => 'Fecha de salida',
             'type' => 'datetime_picker',
@@ -865,7 +864,61 @@ class ProductCrudController extends CrudController
             'tab' => 'Características del Tour',
             'fake' => true,
             'store_in' => 'tour_information',
-        ]);
+        ]); */
+
+        CRUD::addField([
+            'name' => 'tour_information',
+            'label' => 'Disponibilidad de la experiencia',
+            'fields' => [
+                [
+                    'name' => 'day',
+                    'label' => 'Día',
+                    'type' => 'select2_from_array',
+                    'options' => [
+                        0 => 'Todos los Lunes',
+                        1 => 'Todos los Martes',
+                        2 => 'Todos los Miercoles',
+                        3 => 'Todos los Jueves',
+                        4 => 'Todos los Viernes',
+                        5 => 'Todos los Sabados',
+                        6 => 'Todos los Domingos',
+                    ],
+                    'wrapper' => ['class' => 'form-group col-md-3'],
+                ],
+                [
+                    'name' => 'hour',
+                    'label' => 'Hora de inicio',
+                    'type' => 'time',
+                    'wrapper' => ['class' => 'form-group col-md-3'],
+                ],
+                [
+                    'name' => 'adults_price',
+                    'label' => 'Precio por adulto',
+                    'type' => 'number',
+                    'prefix' => '$',
+                    'wrapper' => ['class' => 'form-group col-md-3'],
+                ],
+                [
+                    'name' => 'childrens_price',
+                    'label' => 'Precio por niño',
+                    'type' => 'number',
+                    'prefix' => '$',
+                    'wrapper' => ['class' => 'form-group col-md-3'],
+                ],
+                [
+                    'name' => 'pricing_type',
+                    'type' => 'hidden',
+                    'default' => 'per_adult_children',
+                ],
+                [
+                    'name' => 'available_type',
+                    'type' => 'hidden',
+                    'default' => 'recuring',
+                ],
+            ],
+            'type' => 'repeatable',
+            'tab' => 'Disponibilidad y precio',
+        ]); 
     }
 
     public function setStatusVisibilityFields() {
