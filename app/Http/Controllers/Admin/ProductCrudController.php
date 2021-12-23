@@ -5,12 +5,9 @@ namespace App\Http\Controllers\Admin;
 use DateTime;
 use App\Models\Seller;
 use App\Models\Product;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Cruds\BaseCrudFields;
 use App\Models\ProductCategory;
-use App\Http\Requests\ProductRequest;
-use Backpack\Settings\app\Models\Setting;
 use App\Http\Requests\ProductCreateRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Requests\ProductVariantUpdateRequest;
@@ -72,9 +69,13 @@ class ProductCrudController extends CrudController
     {
         $this->crud->enableBulkActions();
 
-        $this->crud->addButtonFromView('top', 'create_housing', 'product.create_housing', 'end');
-
-        $this->crud->addButtonFromView('top', 'create_tour', 'product.create_tour', 'end');
+        if ($this->admin) {
+            $this->crud->addButtonFromView('top', 'create_housing', 'product.create_housing', 'end');
+            $this->crud->addButtonFromView('top', 'create_tour', 'product.create_tour', 'end');
+        } else if ($this->userSeller->is_turismo_rural ?? null) {
+            $this->crud->addButtonFromView('top', 'create_housing', 'product.create_housing', 'end');
+            $this->crud->addButtonFromView('top', 'create_tour', 'product.create_tour', 'end');
+        }
 
         // If not admin, show only user products
         if(!$this->admin) {

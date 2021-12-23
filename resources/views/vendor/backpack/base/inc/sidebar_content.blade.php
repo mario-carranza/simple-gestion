@@ -130,8 +130,11 @@
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('productinventorysource') }}'><i class='nav-icon la la-warehouse'></i> Bodegas</a></li>
         @endcan
 
+   
         @can('productreservation.list')
-        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('productreservation') }}'><i class='nav-icon la la-map-marked'></i> Reservación</a></li>
+                @if (backpack_user()->can('product.admin') || (backpack_user()->seller->is_turismo_rural ?? null))
+                        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('productreservation') }}'><i class='nav-icon la la-map-marked'></i> Reservas</a></li>
+                @endif
         @endcan
         </ul>
 </li>
