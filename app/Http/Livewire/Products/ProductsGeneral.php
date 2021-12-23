@@ -10,16 +10,24 @@ class ProductsGeneral extends Component
 {
     public $idCategory;
 
+    public $view;
+
+    public $limit;
+
     public function render()
     {
-        return view('livewire.products.short-list')->with('productsShort', $this->getProducts($this->idCategory));
+        return view($this->view)->with('productsShort', $this->getProducts($this->idCategory));
     }
 
-    public function mount($idCategory)
+    public function mount($idCategory, $view = 'livewire.products.short-list', $limit = 5)
     {
         $this->idCategory = $idCategory;
+
+        $this->view = $view;
+
+        $this->limit = $limit;
     }
-    
+
     public function getProducts($idCategory)
     {
         return Product::where('status','=','1')
@@ -28,7 +36,7 @@ class ProductsGeneral extends Component
         ->whereHas('categories', function ($query) use ($idCategory) {
             $query->where('id', $idCategory);
         })
-        ->limit(5)->inRandomOrder()->get();
+        ->limit($this->limit)->inRandomOrder()->get();
     }
 
 }

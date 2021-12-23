@@ -33,7 +33,7 @@ class Product extends Model
     // protected $dates = [];
 
     protected $fakeColumns = ['inventories_json'];
-    
+
     protected $casts = [
         'images_json' => 'array',
         'variations_json' => 'array',
@@ -488,6 +488,11 @@ class Product extends Model
         return $this->categories()->first()->name;
     }
 
+    public function showSubCategories()
+    {
+        return $this->categories()->first()->children;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | HELPERS
@@ -646,7 +651,7 @@ class Product extends Model
                     WHEN (visible_to IS NOT NULL AND visible_from IS NULL) AND (visible_to >= CURDATE()) THEN 1
                     WHEN (visible_from IS NOT NULL AND visible_to IS NOT NULL) AND (visible_from <= CURDATE() AND  CURDATE() <= visible_to) THEN 1
                 ELSE 0
-                END)  
+                END)
                 AS should_show'
             )->having('should_show', '>=', 1);
     }
