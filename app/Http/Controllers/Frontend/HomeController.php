@@ -31,6 +31,13 @@ class HomeController extends Controller
         ->shouldShow()
         ->inRandomOrder()->get();
 
+        $withSubCategories = ProductCategory::where('status', 1)
+        ->whereHas('children', function ($query) {
+            $query->where('status', 1)
+            ->whereNotNull('parent_id');
+        })
+        ->limit(3)->inRandomOrder()->get();
+
         $banner1 = Banners::where('section',1)->first();
         $banner2 = Banners::where('section',2)->first();
         $banner3 = Banners::where('section',3)->first();
@@ -54,7 +61,7 @@ class HomeController extends Controller
         ->orderBy('order')->get();
 
 
-        return view('marketplace', compact('categories','featuredProducts','banners','sliders'));
+        return view('marketplace', compact('categories','featuredProducts','banners','sliders', 'withSubCategories'));
     }
 
     public function getAllProducts()
