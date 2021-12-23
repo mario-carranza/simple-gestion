@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Services\Covepa\CovepaService;
 use Backpack\Settings\app\Models\Setting;
 use Illuminate\Contracts\Session\Session;
+use App\Services\Transbank\WebpayPlusService;
 
 
 
@@ -43,53 +44,28 @@ class WebpayPlusController extends Controller
     private $finalUrl;
     private $orderId;
     private $covepaService;
+    private WebpayPlusService $webpayService;
 
     public function __construct()
     {
         $this->covepaService = new CovepaService();
 
-        $paymentMethodId = null;
-        //Get Config Payment Method
-        //@ todo
+        $this->webpayService = new WebpayPlusService();
+
+
         $this->paymentMethod = PaymentMethod::where('code', $this::PAYMENT_CODE)->first();
-        if ($this->paymentMethod) {
-            $paymentMethodId = $this->paymentMethod->id;
-            $wpmConfig = json_decode($this->paymentMethod->json_value);
-        }
-
-        // Temporal production config
-        $prodPrivateKey = '';
-        $prodPublicKey = '';
-        $prodCommerceCode = '';
-
-        $configuration = new Configuration();
-
-        $configuration->setEnvironment(Setting::get('payment_environment'));
-        $configuration->setCommerceCode($wpmConfig[0]->variable_value);
-        $configuration->setPublicCert($wpmConfig[1]->variable_value);
-        $configuration->setPrivateKey($wpmConfig[2]->variable_value);
-
-        $this->returnUrl = route('transbank.webpayplus.response');
-        $this->finalUrl = route('transbank.plus.final');
-
-        if (Setting::get('payment_environment') == 'INTEGRACION') {
-            $this->transaction = (new Webpay(Configuration::forTestingWebpayPlusNormal()))->getNormalTransaction();
-        } else {
-            $this->transaction = (new Webpay($configuration))->getNormalTransaction();
-        }
 
         $this->orderLoggerService = new OrderLoggerService();
-
     }
 
     public function redirect($orderId)
     {
-
         if (!intval($orderId)) {
             return redirect()->back()->with('error', 'Orden no generada , reintente');
         }
         
         $this->orderId = $orderId;
+
         //Get current Order
         $order = Order::where('id', $orderId)->first();
 
@@ -103,6 +79,7 @@ class WebpayPlusController extends Controller
         $transactions = array();
 
         $products_id = OrderItem::whereOrderId($order->id)->select('product_id')->with('order')->get();
+
         foreach ($products_id as $id) {
             $ids[] = $id['product_id'];
         }
@@ -125,8 +102,8 @@ class WebpayPlusController extends Controller
             //$totalsBySeller[$key]['status'] = $pmSeller->status;
 
             foreach ($order->order_items as $item) {
-
                 $product = Product::find($item->product_id);
+
                 if ($seller->id === $product->seller->id) {
                     $totalsBySeller[$key]['amount'] += ($item->price * $item->qty) + ($item->shipping_total);
                 }
@@ -140,25 +117,35 @@ class WebpayPlusController extends Controller
         foreach ($totalsBySeller as $key => $seller) {
 
             // Add transaction
-            /* $transactions[] = array(
-                "storeCode" => $seller['storeCode'],
-                "amount" => $seller['amount'],
-                "buyOrder" => $buyOrder . 't' . ($key + 1),
-            ); */
             $amountTotal += $seller['amount'];
         }
 
-        /* $transactions[] = array(
-            "storeCode" => Setting::get('storecode_payment'),
-            "amount" => $amountTotal,
-            "buyOrder" => $buyOrder . 't1' ,
-        ); */
+        try {
+            $response = $this->webpayService->createTransaction($amountTotal, $buyOrder, $sessionId);
+        } catch (Exception $e) {
+            $data = [
+                'event' => 'init transaction',
+                'data' => $e->getMessage(),
+                'buyOrder' => $buyOrder,
+                'sessionId' => $sessionId,
+                'transactions' => $transactions,
+            ];
 
-        $response = $this->transaction->initTransaction($amountTotal, $buyOrder, $sessionId, $this->returnUrl, $this->finalUrl);
+            $orderpayment = new OrderPayment();
+
+            $orderpayment->order_id = $order->id;
+            $orderpayment->method = $this->paymentMethod->code;
+            $orderpayment->method_title = $this->paymentMethod->title;
+            $orderpayment->json_out = json_encode($data);
+            $orderpayment->date_out = Carbon::now();
+            $orderpayment->save();
+
+            return view('payments.transbank.webpay.plus.failed', compact('order'));
+        }
 
         //Register  order payment
-
         $orderpayment = new OrderPayment();
+
         $data = [
             'event' => 'init transaction',
             'data' => $response,
@@ -175,14 +162,12 @@ class WebpayPlusController extends Controller
         $orderpayment->save();
 
         //Register  order log
-
         $orderlog = new OrderLog();
         $orderlog->order_id = $order->id;
         $orderlog->event = 'Inicio de pago';
         $orderlog->save();
 
-
-        if (!isset($response->url)) {
+        if (!isset($response['url'])) {
             $result = null;
             return view('payments.transbank.webpay.plus.failed', compact('result', 'order'));
         } else {
@@ -192,7 +177,6 @@ class WebpayPlusController extends Controller
 
     public function response()
     {
-
         $sessionId = null;
         $result = $this->transaction->getTransactionResult(request()->input("token_ws"));
 

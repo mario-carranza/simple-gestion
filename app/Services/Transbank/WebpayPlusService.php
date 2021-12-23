@@ -5,13 +5,9 @@ namespace App\Services\Transbank;
 use Exception;
 use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
 use Backpack\Settings\app\Models\Setting;
 
-/**
- * @todo considerar si esta clase debe existir por cada modulo o un modulo en general
- */
-class TransbankWebpayService {
+class WebpayPlusService {
 
     const PRODUCTION_ENDPOINT = 'https://webpay3g.transbank.cl';
     const INTEGRATION_ENDPOINT = 'https://webpay3gint.transbank.cl';
@@ -101,7 +97,9 @@ class TransbankWebpayService {
     public function createTransaction(float $amount, string $buyOrder, $sessionId) : array
     {
         $url = $this->enviromentEndpoint . '/rswebpaytransaction/api/webpay/v1.2/transactions';
+
         $method = 'POST';
+
         $data = [
             'json' => [
                 'buy_order' => $buyOrder,
@@ -129,7 +127,7 @@ class TransbankWebpayService {
      * @return array estado de la transacción
      * @throws Exception en caso de error en la consult HTTP
      */
-    public function getTokenResult(string $token)
+    public function getTokenResult(string $token) : array
     {
         $url = $this->enviromentEndpoint . '/rswebpaytransaction/api/webpay/v1.2/transactions/' . $token;
         
